@@ -85,29 +85,78 @@
     .access-btn:hover {
       background-color: #45a049;
     }
+
+    /* Estado de los sensores */
+    .status {
+      background-color: #f1f8e9;
+      border: 1px solid #4caf50;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .status .status-item {
+      display: inline-block;
+      margin-right: 20px;
+      font-size: 1.2em;
+    }
+
+    .status .status-item span {
+      font-weight: bold;
+    }
+
+    .status .status-item.green {
+      color: green;
+    }
+
+    .status .status-item.red {
+      color: red;
+    }
   </style>
 </head>
 
 <body>
 
+  <!-- Hero Section -->
   <div class="hero">
     <h1>Sistema Hidropónico</h1>
     <p>Monitoreo inteligente para tu cultivo de lechuga</p>
     <button class="btn" onclick="showData()">Acceder</button>
   </div>
 
+  <!-- Content Section (hidden by default) -->
   <div class="content" id="sensorData" style="display:none;">
+    <!-- Estado del sistema -->
+    <div class="status">
+      <div class="status-item">
+        <span>Conexión:</span> <span class="green">En línea</span>
+      </div>
+      <div class="status-item">
+        <span>Modo:</span> <span class="green">Sensores reales</span>
+      </div>
+      <div class="status-item">
+        <span>pH Sensor:</span> <span class="green">Calibrado</span>
+      </div>
+      <div class="status-item">
+        <span>TDS Sensor:</span> <span class="green">Conectado</span>
+      </div>
+      <p><small>Última actualización: 31/12/1989, 19:29:28</small></p>
+    </div>
+
+    <!-- Sensores -->
     <h2 class="section-title">Sensores</h2>
     <p class="data-item"><span>pH:</span> 6.1</p>
     <p class="data-item"><span>EC:</span> 674</p>
     <p class="data-item"><span>Luz:</span> 335</p>
 
+    <!-- Configuración -->
     <h2 class="section-title">Configuración</h2>
     <p class="data-item"><span>pH mínimo:</span> 5.5</p>
     <p class="data-item"><span>pH máximo:</span> 6.5</p>
     <p class="data-item"><span>EC mínimo:</span> 600</p>
     <p class="data-item"><span>EC máximo:</span> 900</p>
 
+    <!-- Estado del Sistema -->
     <h2 class="section-title">Estado del Sistema</h2>
     <p class="data-item"><span>Bomba ácido:</span> Off</p>
     <p class="data-item"><span>Bomba agua:</span> Off</p>
