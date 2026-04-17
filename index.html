@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monitoreo Hidropónico</title>
+</head>
+
+<body>
+  <h1>Monitoreo Hidropónico</h1>
+
+  <h2>Sensores</h2>
+  <p id="ph">pH: Cargando...</p>
+  <p id="ec">EC: Cargando...</p>
+  <p id="luz">Luz: Cargando...</p>
+
+  <h2>Configuración</h2>
+  <p id="phMin">pH mínimo: Cargando...</p>
+  <p id="phMax">pH máximo: Cargando...</p>
+  <p id="ecMin">EC mínimo: Cargando...</p>
+  <p id="ecMax">EC máximo: Cargando...</p>
+
+  <h2>Estado del sistema</h2>
+  <p id="bombaAcido">Bomba ácido: Cargando...</p>
+  <p id="bombaAgua">Bomba agua: Cargando...</p>
+  <p id="bombaBase">Bomba base: Cargando...</p>
+  <p id="bombaNutrienteA">Bomba nutriente A: Cargando...</p>
+  <p id="bombaNutrienteB">Bomba nutriente B: Cargando...</p>
+  <p id="bombaRecirculacion">Bomba recirculación: Cargando...</p>
+
+  <h2>Histórico</h2>
+  <p id="histPh">Histórico pH: Cargando...</p>
+  <p id="histEc">Histórico EC: Cargando...</p>
+  <p id="histLuz">Histórico luz: Cargando...</p>
+
+  <!-- Firebase Configuration and Realtime Data Display -->
+  <script type="module">
+    // Import the necessary Firebase functions
+    import { db } from "./firebase-config.js";
+    import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    // Sensores
+    onValue(ref(db, "cultivo_vertical/sensores/ph"), (snapshot) => {
+      document.getElementById("ph").innerText = "pH: " + snapshot.val();
+    });
+
+    onValue(ref(db, "cultivo_vertical/sensores/ec"), (snapshot) => {
+      document.getElementById("ec").innerText = "EC: " + snapshot.val();
+    });
+
+    onValue(ref(db, "cultivo_vertical/sensores/luz"), (snapshot) => {
+      document.getElementById("luz").innerText = "Luz: " + snapshot.val();
+    });
+
+    // Configuración
+    onValue(ref(db, "cultivo_vertical/configuracion/ph_min"), (snapshot) => {
+      document.getElementById("phMin").innerText = "pH mínimo: " + snapshot.val();
+    });
+
+    onValue(ref(db, "cultivo_vertical/configuracion/ph_max"), (snapshot) => {
+      document.getElementById("phMax").innerText = "pH máximo: " + snapshot.val();
+    });
+
+    onValue(ref(db, "cultivo_vertical/configuracion/ec_min"), (snapshot) => {
+      document.getElementById("ecMin").innerText = "EC mínimo: " + snapshot.val();
+    });
+
+    onValue(ref(db, "cultivo_vertical/configuracion/ec_max"), (snapshot) => {
+      document.getElementById("ecMax").innerText = "EC máximo: " + snapshot.val();
+    });
+
+    // Estado bombas
+    onValue(ref(db, "cultivo_vertical/estado_sistema/bomba_acido"), (snapshot) => {
+      document.getElementById("bombaAcido").innerText = "Bomba ácido: " + snapshot.val();
+    });
+
+    onValue(ref(db, "cultivo_vertical/estado_sistema/bomba_agua"), (snapshot) => {
+      document.getElementById("bombaAgua").innerText = "Bomba agua: " + snapshot.val();
+    });
+
+    onValue(ref(db, "cultivo_vertical/estado_sistema/bomba_base"), (snapshot) => {
+      document.getElementById("bombaBase").innerText = "Bomba base: " + snapshot.val();
+    });
+
+    onValue(ref(db, "cultivo_vertical/estado_sistema/bomba_nutrienteA"), (snapshot) => {
+      document.getElementById("bombaNutrienteA").innerText = "Bomba nutriente A: " + snapshot.val();
+    });
+
+    onValue(ref(db, "cultivo_vertical/estado_sistema/bomba_nutrienteB"), (snapshot) => {
+      document.getElementById("bombaNutrienteB").innerText = "Bomba nutriente B: " + snapshot.val();
+    });
+
+    onValue(ref(db, "cultivo_vertical/estado_sistema/bomba_recirculacion"), (snapshot) => {
+      document.getElementById("bombaRecirculacion").innerText = "Bomba recirculación: " + snapshot.val();
+    });
+
+    // Histórico
+    onValue(ref(db, "cultivo_vertical/historico_datos/ph"), (snapshot) => {
+      document.getElementById("histPh").innerText = "Histórico pH: " + snapshot.val();
+    });
+
+    onValue(ref(db, "cultivo_vertical/historico_datos/ec"), (snapshot) => {
+      document.getElementById("histEc").innerText = "Histórico EC: " + snapshot.val();
+    });
+
+    onValue(ref(db, "cultivo_vertical/historico_datos/luz"), (snapshot) => {
+      document.getElementById("histLuz").innerText = "Histórico luz: " + snapshot.val();
+    });
+  </script>
+</body>
+
+</html>
