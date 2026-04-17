@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hidroponía Lechuga</title>
-
+  <title>Hidropónica Lechuga</title>
   <style>
+    /* Estilos generales */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -14,249 +14,158 @@
     }
 
     body {
-      font-family: Arial, sans-serif;
-      background: #dff5df;
-      color: #1f3b1f;
+      font-family: 'Arial', sans-serif;
       min-height: 100vh;
+      margin: 0;
+      transition: background-color 0.3s, color 0.3s;
     }
 
-    .hero {
-      background: linear-gradient(135deg, #5fbf6a, #3e9c4a);
-      color: white;
+    h1 {
       text-align: center;
-      padding: 40px 20px;
-      border-bottom-left-radius: 24px;
-      border-bottom-right-radius: 24px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    }
-
-    .hero h1 {
-      font-size: 2.2rem;
-      margin-bottom: 10px;
-    }
-
-    .hero p {
-      font-size: 1rem;
-      opacity: 0.95;
+      margin-top: 40px;
+      font-size: 2.5rem;
+      color: #fff;
     }
 
     .container {
-      width: 92%;
-      max-width: 900px;
-      margin: 24px auto 40px auto;
+      width: 80%;
+      margin: 40px auto;
+      padding: 20px;
+      border-radius: 10px;
     }
 
-    .main-button {
-      display: block;
-      width: 100%;
-      max-width: 320px;
-      margin: 0 auto 24px auto;
-      padding: 14px 18px;
-      border: none;
-      border-radius: 14px;
-      background: #2f7d32;
+    /* Estilos para el tema claro */
+    .light-theme {
+      background-color: #f4f4f9;
+      color: #333;
+    }
+
+    /* Estilos para el tema oscuro */
+    .dark-theme {
+      background-color: #121212;
+      color: #ddd;
+    }
+
+    .button {
+      background-color: #4CAF50;
       color: white;
-      font-size: 1rem;
-      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(47, 125, 50, 0.25);
-      transition: 0.2s ease;
-    }
-
-    .main-button:hover {
-      background: #27692a;
-      transform: translateY(-1px);
-    }
-
-    .section {
-      background: white;
-      border-radius: 18px;
-      padding: 20px;
-      margin-bottom: 18px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-    }
-
-    .section h2 {
-      color: #2f7d32;
-      margin-bottom: 14px;
-      font-size: 1.3rem;
-      border-bottom: 2px solid #dff5df;
-      padding-bottom: 8px;
-    }
-
-    .item {
-      background: #f7fcf7;
-      border: 1px solid #e5f3e5;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 10px;
       font-size: 1rem;
+      transition: background-color 0.3s;
     }
 
-    .hidden {
-      display: none;
+    .button:hover {
+      background-color: #45a049;
     }
 
-    .footer {
-      text-align: center;
+    .info-box {
+      background-color: #fff;
+      color: #333;
       padding: 20px;
-      color: #3f5f3f;
-      font-size: 0.9rem;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    @media (max-width: 600px) {
-      .hero h1 {
-        font-size: 1.8rem;
-      }
+    /* Agregar efecto para los títulos y textos */
+    .section-title {
+      color: #4CAF50;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
 
-      .hero p {
-        font-size: 0.95rem;
-      }
+    .info-box p {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
 
-      .section {
-        padding: 16px;
-      }
+    /* Estilo de contenedor de botones */
+    .button-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .state-box {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .state-box p {
+      font-size: 1rem;
     }
   </style>
 </head>
 
-<body>
+<body class="light-theme">
+  <div class="container">
+    <h1>Hidropónica Lechuga</h1>
+    <!-- Botón para cambiar entre temas -->
+    <div class="button-container">
+      <button id="themeToggleBtn" class="button">Cambiar a Tema Oscuro</button>
+    </div>
 
-  <header class="hero">
-    <h1>Hidroponía Lechuga</h1>
-    <p>Monitoreo inteligente del sistema hidropónico en tiempo real</p>
-  </header>
+    <!-- Información de los sensores -->
+    <div class="info-box">
+      <h2 class="section-title">Sensores</h2>
+      <p id="ph">pH: Cargando...</p>
+      <p id="ec">EC: Cargando...</p>
+      <p id="luz">Luz: Cargando...</p>
+    </div>
 
-  <main class="container">
-    <button class="main-button" onclick="toggleSensores()">
-      Mostrar / Ocultar Sensores
-    </button>
+    <!-- Información de configuración -->
+    <div class="info-box">
+      <h2 class="section-title">Configuración</h2>
+      <p id="phMin">pH mínimo: Cargando...</p>
+      <p id="phMax">pH máximo: Cargando...</p>
+      <p id="ecMin">EC mínimo: Cargando...</p>
+      <p id="ecMax">EC máximo: Cargando...</p>
+    </div>
 
-    <!-- SENSORES -->
-    <section class="section hidden" id="sensoresSection">
-      <h2>Sensores</h2>
-      <div class="item" id="ph">pH: Cargando...</div>
-      <div class="item" id="ec">EC: Cargando...</div>
-      <div class="item" id="luz">Luz: Cargando...</div>
-    </section>
+    <!-- Estado del sistema -->
+    <div class="state-box">
+      <div>
+        <p><strong>Estado del Sistema:</strong></p>
+        <p id="connectionStatus">Conexión: En línea</p>
+        <p id="sensorMode">Modo: Sensores en tiempo real</p>
+      </div>
+      <div>
+        <p><strong>Sensores:</strong></p>
+        <p id="phSensorStatus">pH Sensor: Calibrado</p>
+        <p id="ecSensorStatus">EC Sensor: Conectado</p>
+      </div>
+    </div>
 
-    <!-- CONFIGURACIÓN -->
-    <section class="section">
-      <h2>Configuración</h2>
-      <div class="item" id="phMin">pH mínimo: Cargando...</div>
-      <div class="item" id="phMax">pH máximo: Cargando...</div>
-      <div class="item" id="ecMin">EC mínimo: Cargando...</div>
-      <div class="item" id="ecMax">EC máximo: Cargando...</div>
-    </section>
-
-    <!-- ESTADO DEL SISTEMA -->
-    <section class="section">
-      <h2>Estado del sistema</h2>
-      <div class="item" id="bombaAcido">Bomba ácido: Cargando...</div>
-      <div class="item" id="bombaAgua">Bomba agua: Cargando...</div>
-      <div class="item" id="bombaBase">Bomba base: Cargando...</div>
-      <div class="item" id="bombaNutrienteA">Bomba nutriente A: Cargando...</div>
-      <div class="item" id="bombaNutrienteB">Bomba nutriente B: Cargando...</div>
-      <div class="item" id="bombaRecirculacion">Bomba recirculación: Cargando...</div>
-    </section>
-
-    <!-- HISTÓRICO -->
-    <section class="section">
-      <h2>Histórico</h2>
-      <div class="item" id="histPh">Histórico pH: Cargando...</div>
-      <div class="item" id="histEc">Histórico EC: Cargando...</div>
-      <div class="item" id="histLuz">Histórico luz: Cargando...</div>
-    </section>
-  </main>
-
-  <div class="footer">
-    Sistema de monitoreo hidropónico
+    <!-- Botón para mostrar/ocultar datos -->
+    <div class="button-container">
+      <button id="showDataBtn" class="button">Mostrar Datos</button>
+    </div>
   </div>
 
   <script>
-    function toggleSensores() {
-      const section = document.getElementById("sensoresSection");
-      section.classList.toggle("hidden");
+    // Función para alternar entre temas
+    document.getElementById("themeToggleBtn").addEventListener("click", function () {
+      const body = document.body;
+      const isLight = body.classList.contains("light-theme");
+      body.classList.toggle("light-theme", !isLight);
+      body.classList.toggle("dark-theme", isLight);
 
-      if (!section.classList.contains("hidden")) {
-        section.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }
-  </script>
-
-  <!-- Firebase Configuration and Realtime Data Display -->
-  <script type="module">
-    import { db } from "./firebase-config.js";
-    import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-    // Sensores
-    onValue(ref(db, "cultivo_vertical/sensores/ph"), (snapshot) => {
-      document.getElementById("ph").innerText = "pH: " + snapshot.val();
+      // Cambiar texto del botón según el tema
+      this.textContent = isLight ? "Cambiar a Tema Claro" : "Cambiar a Tema Oscuro";
     });
 
-    onValue(ref(db, "cultivo_vertical/sensores/ec"), (snapshot) => {
-      document.getElementById("ec").innerText = "EC: " + snapshot.val();
-    });
-
-    onValue(ref(db, "cultivo_vertical/sensores/luz"), (snapshot) => {
-      document.getElementById("luz").innerText = "Luz: " + snapshot.val();
-    });
-
-    // Configuración
-    onValue(ref(db, "cultivo_vertical/configuracion/ph_min"), (snapshot) => {
-      document.getElementById("phMin").innerText = "pH mínimo: " + snapshot.val();
-    });
-
-    onValue(ref(db, "cultivo_vertical/configuracion/ph_max"), (snapshot) => {
-      document.getElementById("phMax").innerText = "pH máximo: " + snapshot.val();
-    });
-
-    onValue(ref(db, "cultivo_vertical/configuracion/ec_min"), (snapshot) => {
-      document.getElementById("ecMin").innerText = "EC mínimo: " + snapshot.val();
-    });
-
-    onValue(ref(db, "cultivo_vertical/configuracion/ec_max"), (snapshot) => {
-      document.getElementById("ecMax").innerText = "EC máximo: " + snapshot.val();
-    });
-
-    // Estado bombas
-    onValue(ref(db, "cultivo_vertical/estado_sistema/bomba_acido"), (snapshot) => {
-      document.getElementById("bombaAcido").innerText = "Bomba ácido: " + snapshot.val();
-    });
-
-    onValue(ref(db, "cultivo_vertical/estado_sistema/bomba_agua"), (snapshot) => {
-      document.getElementById("bombaAgua").innerText = "Bomba agua: " + snapshot.val();
-    });
-
-    onValue(ref(db, "cultivo_vertical/estado_sistema/bomba_base"), (snapshot) => {
-      document.getElementById("bombaBase").innerText = "Bomba base: " + snapshot.val();
-    });
-
-    onValue(ref(db, "cultivo_vertical/estado_sistema/bomba_nutrienteA"), (snapshot) => {
-      document.getElementById("bombaNutrienteA").innerText = "Bomba nutriente A: " + snapshot.val();
-    });
-
-    onValue(ref(db, "cultivo_vertical/estado_sistema/bomba_nutrienteB"), (snapshot) => {
-      document.getElementById("bombaNutrienteB").innerText = "Bomba nutriente B: " + snapshot.val();
-    });
-
-    onValue(ref(db, "cultivo_vertical/estado_sistema/bomba_recirculacion"), (snapshot) => {
-      document.getElementById("bombaRecirculacion").innerText = "Bomba recirculación: " + snapshot.val();
-    });
-
-    // Histórico
-    onValue(ref(db, "cultivo_vertical/historico_datos/ph"), (snapshot) => {
-      document.getElementById("histPh").innerText = "Histórico pH: " + snapshot.val();
-    });
-
-    onValue(ref(db, "cultivo_vertical/historico_datos/ec"), (snapshot) => {
-      document.getElementById("histEc").innerText = "Histórico EC: " + snapshot.val();
-    });
-
-    onValue(ref(db, "cultivo_vertical/historico_datos/luz"), (snapshot) => {
-      document.getElementById("histLuz").innerText = "Histórico luz: " + snapshot.val();
+    // Mostrar / Ocultar información de los sensores
+    document.getElementById("showDataBtn").addEventListener("click", function () {
+      const infoBox = document.querySelectorAll('.info-box');
+      infoBox.forEach(box => box.classList.toggle('show'));
     });
   </script>
-
 </body>
+
 </html>
