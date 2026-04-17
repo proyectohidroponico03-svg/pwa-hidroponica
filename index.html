@@ -4,167 +4,153 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hidropónica Lechuga</title>
+  <title>Sistema Hidropónico</title>
   <style>
-    /* Estilos generales */
-    * {
-      box-sizing: border-box;
+    /* Diseño General */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5fdf6;
+      color: #333;
       margin: 0;
       padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
-    body {
-      font-family: 'Arial', sans-serif;
-      min-height: 100vh;
-      margin: 0;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    h1 {
+    /* Cabecera */
+    header {
       text-align: center;
-      margin-top: 40px;
-      font-size: 2.5rem;
-      color: #fff;
-    }
-
-    .container {
-      width: 80%;
-      margin: 40px auto;
+      background-color: #4CAF50;
+      color: white;
       padding: 20px;
-      border-radius: 10px;
+      width: 100%;
+      font-size: 30px;
     }
 
-    /* Estilos para el tema claro */
-    .light-theme {
-      background-color: #f4f4f9;
+    /* Diseño de la tarjeta con botones */
+    .main-container {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      background-color: #ffffff;
+      padding: 40px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      margin-top: 20px;
+      width: 90%;
+      max-width: 800px;
+    }
+
+    .main-container h2 {
       color: #333;
     }
 
-    /* Estilos para el tema oscuro */
-    .dark-theme {
-      background-color: #121212;
-      color: #ddd;
+    .btn-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      width: 100%;
     }
 
-    .button {
+    .btn {
       background-color: #4CAF50;
       color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
+      padding: 20px;
+      font-size: 18px;
+      margin: 0 10px;
       cursor: pointer;
-      font-size: 1rem;
-      transition: background-color 0.3s;
+      border: none;
+      border-radius: 10px;
+      transition: background-color 0.3s ease;
     }
 
-    .button:hover {
+    .btn:hover {
       background-color: #45a049;
     }
 
-    .info-box {
-      background-color: #fff;
-      color: #333;
-      padding: 20px;
-      margin-bottom: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Agregar efecto para los títulos y textos */
-    .section-title {
-      color: #4CAF50;
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-    }
-
-    .info-box p {
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-    }
-
-    /* Estilo de contenedor de botones */
-    .button-container {
-      text-align: center;
+    /* Estilo para el contenedor de sensores */
+    .sensor-info {
+      display: none;
+      text-align: left;
       margin-top: 20px;
+      width: 100%;
     }
 
-    .state-box {
-      display: flex;
-      justify-content: space-between;
-      padding: 15px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .state-box p {
-      font-size: 1rem;
+    .sensor-info p {
+      font-size: 16px;
+      line-height: 1.5;
     }
   </style>
 </head>
 
-<body class="light-theme">
-  <div class="container">
-    <h1>Hidropónica Lechuga</h1>
-    <!-- Botón para cambiar entre temas -->
-    <div class="button-container">
-      <button id="themeToggleBtn" class="button">Cambiar a Tema Oscuro</button>
+<body>
+
+  <!-- Cabecera -->
+  <header>
+    <h1>Sistema Hidropónico</h1>
+    <p>Monitoreo inteligente para tu cultivo de lechuga</p>
+  </header>
+
+  <!-- Contenedor Principal con botones -->
+  <div class="main-container">
+    <h2>Selecciona una opción</h2>
+
+    <div class="btn-container">
+      <button class="btn" onclick="mostrarSensores()">Tiempo Real</button>
+      <button class="btn" onclick="mostrarControl()">Control Total</button>
+      <button class="btn" onclick="mostrarAnalisis()">Análisis</button>
     </div>
 
-    <!-- Información de los sensores -->
-    <div class="info-box">
-      <h2 class="section-title">Sensores</h2>
-      <p id="ph">pH: Cargando...</p>
-      <p id="ec">EC: Cargando...</p>
-      <p id="luz">Luz: Cargando...</p>
+    <!-- Información de los Sensores (oculta por defecto) -->
+    <div class="sensor-info" id="sensorInfo">
+      <h3>Estado del Sistema</h3>
+      <p><strong>Conexión:</strong> <span id="conexion">En línea</span></p>
+      <p><strong>Modo:</strong> <span id="modo">Sensores reales</span></p>
+      <p><strong>pH Sensor:</strong> <span id="phSensor">Calibrado</span></p>
+      <p><strong>TDS Sensor:</strong> <span id="tdsSensor">Conectado</span></p>
     </div>
 
-    <!-- Información de configuración -->
-    <div class="info-box">
-      <h2 class="section-title">Configuración</h2>
-      <p id="phMin">pH mínimo: Cargando...</p>
-      <p id="phMax">pH máximo: Cargando...</p>
-      <p id="ecMin">EC mínimo: Cargando...</p>
-      <p id="ecMax">EC máximo: Cargando...</p>
+    <!-- Información de Control Total (oculta por defecto) -->
+    <div class="sensor-info" id="controlInfo">
+      <h3>Control de Bombas</h3>
+      <p><strong>Bomba ácido:</strong> <span id="bombaAcido">Activada</span></p>
+      <p><strong>Bomba agua:</strong> <span id="bombaAgua">Desactivada</span></p>
+      <p><strong>Bomba base:</strong> <span id="bombaBase">Activada</span></p>
     </div>
 
-    <!-- Estado del sistema -->
-    <div class="state-box">
-      <div>
-        <p><strong>Estado del Sistema:</strong></p>
-        <p id="connectionStatus">Conexión: En línea</p>
-        <p id="sensorMode">Modo: Sensores en tiempo real</p>
-      </div>
-      <div>
-        <p><strong>Sensores:</strong></p>
-        <p id="phSensorStatus">pH Sensor: Calibrado</p>
-        <p id="ecSensorStatus">EC Sensor: Conectado</p>
-      </div>
-    </div>
-
-    <!-- Botón para mostrar/ocultar datos -->
-    <div class="button-container">
-      <button id="showDataBtn" class="button">Mostrar Datos</button>
+    <!-- Información de Análisis (oculta por defecto) -->
+    <div class="sensor-info" id="analisisInfo">
+      <h3>Análisis de Datos</h3>
+      <p><strong>Histórico de pH:</strong> <span id="histPh">6.5</span></p>
+      <p><strong>Histórico de TDS:</strong> <span id="histTds">800 ppm</span></p>
     </div>
   </div>
 
   <script>
-    // Función para alternar entre temas
-    document.getElementById("themeToggleBtn").addEventListener("click", function () {
-      const body = document.body;
-      const isLight = body.classList.contains("light-theme");
-      body.classList.toggle("light-theme", !isLight);
-      body.classList.toggle("dark-theme", isLight);
+    // Función para mostrar los sensores
+    function mostrarSensores() {
+      document.getElementById('sensorInfo').style.display = 'block';
+      document.getElementById('controlInfo').style.display = 'none';
+      document.getElementById('analisisInfo').style.display = 'none';
+    }
 
-      // Cambiar texto del botón según el tema
-      this.textContent = isLight ? "Cambiar a Tema Claro" : "Cambiar a Tema Oscuro";
-    });
+    // Función para mostrar el control total
+    function mostrarControl() {
+      document.getElementById('sensorInfo').style.display = 'none';
+      document.getElementById('controlInfo').style.display = 'block';
+      document.getElementById('analisisInfo').style.display = 'none';
+    }
 
-    // Mostrar / Ocultar información de los sensores
-    document.getElementById("showDataBtn").addEventListener("click", function () {
-      const infoBox = document.querySelectorAll('.info-box');
-      infoBox.forEach(box => box.classList.toggle('show'));
-    });
+    // Función para mostrar análisis de datos
+    function mostrarAnalisis() {
+      document.getElementById('sensorInfo').style.display = 'none';
+      document.getElementById('controlInfo').style.display = 'none';
+      document.getElementById('analisisInfo').style.display = 'block';
+    }
   </script>
 </body>
 
