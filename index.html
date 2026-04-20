@@ -273,9 +273,14 @@
       $("phCalibrado").textContent = textoCalibrado(estado.ph_calibrado);
       $("ecCalibrado").textContent = textoCalibrado(estado.ec_calibrado);
 
-      $("phSensorEstado").textContent = textoCalibrado(estado.ph_calibrado);
+      $("phSensorEstado").textContent = textoConectado(estado.sensor_ph_conectado);
+      $("phSensorEstado").className = activo(estado.sensor_ph_conectado) ? "green" : "red";
+
       $("tdsSensorEstado").textContent = textoConectado(estado.sensor_ec_conectado);
+      $("tdsSensorEstado").className = activo(estado.sensor_ec_conectado) ? "green" : "red";
+
       $("luzSensorEstado").textContent = textoConectado(estado.sensor_luz_conectado);
+      $("luzSensorEstado").className = activo(estado.sensor_luz_conectado) ? "green" : "red";
 
       $("alertaActiva").textContent = textoSiNo(alertas.activa);
       $("alertaEstado").textContent = valorSeguro(alertas.estado);
