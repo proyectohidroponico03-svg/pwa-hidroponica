@@ -617,7 +617,16 @@
           <div class="sensor-main-value">
             <span id="luzValor">--</span><span class="sensor-unit">Valor</span>
           </div>
-          <div class="sensor-range">Rango óptimo: Alto</div>
+          <div class="sensor-range">Rango óptimo: Mayor a 500</div>
+          <div class="sensor-progress-wrap">
+            <div class="sensor-progress-labels">
+              <span>0</span><span>100</span><span>500</span><span>4095</span>
+            </div>
+            <div class="sensor-progress-bar-bg">
+              <div class="sensor-progress-rango" id="luzRango"></div>
+              <div class="sensor-progress-indicator" id="luzIndicador"></div>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -699,13 +708,6 @@
       </div>
     </div>
 
-    <div class="section-card">
-      <h2 class="section-title">Estado del Sistema</h2>
-      <p class="data-item"><span>Sistema activo:</span> <span id="sistemaActivo">--</span></p>
-      <p class="data-item"><span>Sistema listo:</span> <span id="sistemaListo">--</span></p>
-      <p class="data-item"><span>Dosis inicial hecha:</span> <span id="dosisInicialHecha">--</span></p>
-    </div>
-
     <div id="seccionAlertaEC" style="display:none;" class="section-card">
       <h2 class="section-title">⚠️ Alerta EC alto</h2>
       <div class="alert-box">
@@ -736,7 +738,6 @@
     const $ = (id) => document.getElementById(id);
 
     function activo(v) { return v === 1 || v === true || v === "1" || v === "true"; }
-    function textoSiNo(v) { return activo(v) ? "Sí" : "No"; }
     function textoConectado(v) { return activo(v) ? "Conectado" : "Desconectado"; }
     function textoCalibrado(v) { return activo(v) ? "Calibrado" : "Sin calibrar"; }
     function valorSeguro(v, fallback = "--") { return v === undefined || v === null || v === "" ? fallback : v; }
@@ -768,6 +769,22 @@
       $("ecRangoTexto").textContent = ecMinVal + " - " + ecMaxVal + " ppm";
     }
 
+    function actualizarBarraLuz(luzVal) {
+      const min = 0, max = 4095;
+      const luzMinOptimo = 500;
+      const luzMaxOptimo = 4095;
+
+      const rangoIzq = ((luzMinOptimo - min) / (max - min)) * 100;
+      const rangAncho = ((luzMaxOptimo - luzMinOptimo) / (max - min)) * 100;
+      const pos = Math.max(0, Math.min(100, ((luzVal - min) / (max - min)) * 100));
+      const enRango = luzVal >= luzMinOptimo;
+
+      $("luzRango").style.left = rangoIzq + "%";
+      $("luzRango").style.width = rangAncho + "%";
+      $("luzIndicador").style.left = pos + "%";
+      $("luzIndicador").className = "sensor-progress-indicator" + (enRango ? "" : " fuera");
+    }
+
     function actualizarBannerAlerta(alertas) {
       const banner = $("bannerAlertaEC");
       const seccion = $("seccionAlertaEC");
@@ -791,14 +808,22 @@
       const phConectado = activo(estado.sensor_ph_conectado);
       const ecConectado = activo(estado.sensor_ec_conectado);
       const luzConectado = activo(estado.sensor_luz_conectado);
-      $("phSubtitle").textContent = phConectado ? (activo(estado.ph_calibrado) ? "PH4502C (Calibrado)" : "PH4502C (Sin calibrar)") : "PH4502C (Desconectado)";
-      $("ecSubtitle").textContent = ecConectado ? "SEN0244 (Conectado)" : "SEN0244 (Desconectado - Sin datos)";
+
+      $("phSubtitle").textContent = phConectado
+        ? (activo(estado.ph_calibrado) ? "PH4502C (Calibrado)" : "PH4502C (Sin calibrar)")
+        : "PH4502C (Desconectado)";
+
+      $("ecSubtitle").textContent = ecConectado
+        ? "SEN0244 (Conectado)"
+        : "SEN0244 (Desconectado - Sin datos)";
+
       const luzVal = Number(sensores.luz ?? 0);
       let luzTexto = "LDR";
       if (!luzConectado) luzTexto = "LDR (Desconectado)";
       else if (luzVal <= 100) luzTexto = "LDR - Muy poca luz";
       else if (luzVal <= 500) luzTexto = "LDR - Poca luz";
       else luzTexto = "LDR - Buena luz";
+
       $("luzSubtitle").textContent = luzTexto;
       $("phBadge").textContent = phConectado ? "Activo" : "Alerta";
       $("ecBadge").textContent = ecConectado ? "Activo" : "Alerta";
@@ -814,6 +839,7 @@
         NutrienteA: activo(estado.bomba_nutrienteA),
         NutrienteB: activo(estado.bomba_nutrienteB),
       };
+
       for (const [nombre, on] of Object.entries(bombas)) {
         $("estado" + nombre + "Card").textContent = on ? "ON" : "OFF";
         $("estado" + nombre + "Card").className = on ? "actuator-status on" : "actuator-status off";
@@ -846,15 +872,8 @@
           maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
-            x: {
-              grid: { display: false },
-              ticks: {}
-            },
-            y: {
-              beginAtZero,
-              grid: {},
-              ticks: {}
-            }
+            x: { grid: { display: false }, ticks: {} },
+            y: { beginAtZero, grid: {}, ticks: {} }
           }
         }
       });
@@ -870,23 +889,18 @@
 
       [chartPh, chartTds, chartLuz].forEach(chart => {
         if (!chart) return;
-
         chart.options.scales.x.ticks.color = colorTexto;
         chart.options.scales.y.ticks.color = colorTexto;
         chart.options.scales.x.grid.color = colorGrid;
         chart.options.scales.y.grid.color = colorGrid;
-
         chart.update();
       });
     }
 
     function aplicarTema(esOscuro) {
       document.body.classList.toggle("dark-mode", esOscuro);
-
       const boton = $("themeToggle");
-      if (boton) {
-        boton.textContent = esOscuro ? "☀️ Modo claro" : "🌙 Modo oscuro";
-      }
+      if (boton) boton.textContent = esOscuro ? "☀️ Modo claro" : "🌙 Modo oscuro";
 
       try {
         localStorage.setItem("tema_hidroponico", esOscuro ? "dark" : "light");
@@ -953,6 +967,8 @@
 
       const phVal = Number(valorSeguro(sensores.ph, 0));
       const ecVal = Number(valorSeguro(sensores.ec, 0));
+      const luzVal = Number(valorSeguro(sensores.luz, 0));
+
       const ecMinVal = Number(valorSeguro(config.ec_min, 400));
       const ecMaxVal = Number(valorSeguro(config.ec_max, 900));
       const phMinVal = Number(valorSeguro(config.ph_min, 5.5));
@@ -961,23 +977,26 @@
       $("phValor").textContent = valorSeguro(sensores.ph);
       $("ecValor").textContent = valorSeguro(sensores.ec);
       $("luzValor").textContent = valorSeguro(sensores.luz);
+
       $("phMin").textContent = valorSeguro(config.ph_min);
       $("phMax").textContent = valorSeguro(config.ph_max);
       $("ecMin").textContent = valorSeguro(config.ec_min);
       $("ecMax").textContent = valorSeguro(config.ec_max);
       $("litrosAgua").textContent = valorSeguro(config.litros_agua);
+
       $("diasCultivo").textContent = valorSeguro(cultivo.dias_cultivo);
       $("etapaCultivo").textContent = valorSeguro(cultivo.etapa);
       $("fechaInicioCultivo").textContent = valorSeguro(cultivo.fecha_inicio_cultivo);
-      $("sistemaActivo").textContent = textoSiNo(estado.sistema_activo);
-      $("sistemaListo").textContent = textoSiNo(estado.sistema_listo);
-      $("dosisInicialHecha").textContent = textoSiNo(estado.dosis_inicial_hecha);
+
       $("phCalibrado").textContent = textoCalibrado(estado.ph_calibrado);
       $("ecCalibrado").textContent = textoCalibrado(estado.ec_calibrado);
+
       $("phSensorEstado").textContent = textoConectado(estado.sensor_ph_conectado);
       $("phSensorEstado").className = activo(estado.sensor_ph_conectado) ? "status-value green" : "status-value red";
+
       $("tdsSensorEstado").textContent = textoConectado(estado.sensor_ec_conectado);
       $("tdsSensorEstado").className = activo(estado.sensor_ec_conectado) ? "status-value green" : "status-value red";
+
       $("luzSensorEstado").textContent = textoConectado(estado.sensor_luz_conectado);
       $("luzSensorEstado").className = activo(estado.sensor_luz_conectado) ? "status-value green" : "status-value red";
 
@@ -985,6 +1004,7 @@
       actualizarTarjetasActuadores(estado);
       actualizarBarraPH(phVal, phMinVal, phMaxVal);
       actualizarBarraEC(ecVal, ecMinVal, ecMaxVal);
+      actualizarBarraLuz(luzVal);
       actualizarBannerAlerta(alertas);
 
       const ultima = valorSeguro(estado.ultima_actualizacion, "");
