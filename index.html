@@ -16,7 +16,6 @@
       color: #1f1f1f;
     }
 
-    /* ===== BANNER ALERTA EC ALTO ===== */
     #bannerAlertaEC {
       display: none;
       position: fixed;
@@ -44,12 +43,7 @@
     }
 
     .banner-icon { font-size: 1.6em; }
-
-    .banner-titulo {
-      font-size: 1.1em;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-    }
+    .banner-titulo { font-size: 1.1em; font-weight: 800; letter-spacing: 0.5px; }
 
     .banner-datos {
       display: flex;
@@ -66,7 +60,6 @@
       font-weight: 700;
     }
 
-    /* ===== HERO ===== */
     .hero {
       background-color: #4caf50;
       color: white;
@@ -91,13 +84,8 @@
 
     .btn:hover, .access-btn:hover { background-color: #45a049; }
 
-    .content {
-      margin: 24px;
-      background: transparent;
-      padding: 0;
-    }
+    .content { margin: 24px; background: transparent; padding: 0; }
 
-    /* ===== CARDS GENERALES ===== */
     .section-card {
       background: #ffffff;
       border-radius: 16px;
@@ -106,19 +94,10 @@
       margin-bottom: 20px;
     }
 
-    .section-title {
-      font-size: 1.8em;
-      margin-bottom: 12px;
-      color: #33a047;
-    }
+    .section-title { font-size: 1.8em; margin-bottom: 12px; color: #33a047; }
 
-    .access-btn {
-      display: block;
-      width: 220px;
-      margin: 30px auto 0;
-    }
+    .access-btn { display: block; width: 220px; margin: 30px auto 0; }
 
-    /* ===== STATUS PANEL ===== */
     .status-panel {
       background: #ffffff;
       border-radius: 16px;
@@ -127,12 +106,7 @@
       margin-bottom: 20px;
     }
 
-    .status-title {
-      font-size: 1.35em;
-      font-weight: 700;
-      margin-bottom: 18px;
-      color: #1f1f1f;
-    }
+    .status-title { font-size: 1.35em; font-weight: 700; margin-bottom: 18px; color: #1f1f1f; }
 
     .status-grid {
       display: grid;
@@ -158,7 +132,6 @@
     .red { color: #e53935; }
     .blue { color: #1e88e5; }
 
-    /* ===== CULTIVO ===== */
     .cultivo-panel {
       background: #ffffff;
       border-radius: 16px;
@@ -197,7 +170,6 @@
     .cultivo-label { font-size: 0.9em; color: #666; font-weight: 600; }
     .cultivo-value { font-size: 1.05em; color: #1f1f1f; font-weight: 700; }
 
-    /* ===== SENSORES ===== */
     .sensor-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -229,19 +201,11 @@
       padding: 3px 10px; border-radius: 999px; margin-bottom: 10px;
     }
 
-    .sensor-main-value {
-      font-size: 2.1em; font-weight: 800;
-      color: #1f1f1f; line-height: 1.1;
-    }
-
+    .sensor-main-value { font-size: 2.1em; font-weight: 800; color: #1f1f1f; line-height: 1.1; }
     .sensor-unit { font-size: 0.55em; font-weight: 700; color: #555; margin-left: 4px; }
     .sensor-range { margin-top: 8px; font-size: 0.78em; color: #7c7c7c; }
 
-    /* ===== BARRA DE PROGRESO SENSORES ===== */
-    .sensor-progress-wrap {
-      margin-top: 12px;
-      padding: 0 4px;
-    }
+    .sensor-progress-wrap { margin-top: 12px; padding: 0 4px; }
 
     .sensor-progress-labels {
       display: flex;
@@ -284,7 +248,6 @@
       box-shadow: 0 0 0 2px #e53935;
     }
 
-    /* ===== HISTORIAL ===== */
     .history-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(320px, 1fr));
@@ -313,7 +276,6 @@
     .history-config-item { font-size: 0.9em; margin: 5px 0; color: #333; }
     .history-config-item span { font-weight: 700; }
 
-    /* ===== ACTUADORES ===== */
     .actuator-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(260px, 1fr));
@@ -363,7 +325,6 @@
     .actuator-status.on { color: #2eaf4a; }
     .actuator-status.off { color: #8f8f8f; }
 
-    /* ===== ALERTA EC ALTO (sección abajo simplificada) ===== */
     .alert-box {
       background: #fff8e1;
       border: 1px solid #ffb300;
@@ -375,7 +336,6 @@
     .data-item { margin: 6px 0; font-size: 1.15em; }
     .data-item span { font-weight: bold; }
 
-    /* ===== RESPONSIVE ===== */
     @media (max-width: 1024px) {
       .cultivo-grid, .actuator-grid, .history-grid { grid-template-columns: 1fr; }
     }
@@ -395,7 +355,6 @@
 
 <body>
 
-  <!-- ===== BANNER ALERTA EC ALTO ===== -->
   <div id="bannerAlertaEC">
     <div class="banner-icon">⚠️</div>
     <div class="banner-titulo">EC ALTO DETECTADO</div>
@@ -487,7 +446,6 @@
       <h2 class="section-title">Sensores</h2>
       <div class="sensor-cards">
 
-        <!-- pH -->
         <div class="sensor-card">
           <div class="sensor-card-top">🧪 <span>pH</span></div>
           <div class="sensor-card-subtitle" id="phSubtitle">PH4502C</div>
@@ -507,7 +465,6 @@
           </div>
         </div>
 
-        <!-- EC -->
         <div class="sensor-card">
           <div class="sensor-card-top">💧 <span>TDS/Conductividad</span></div>
           <div class="sensor-card-subtitle" id="ecSubtitle">SEN0244</div>
@@ -527,7 +484,6 @@
           </div>
         </div>
 
-        <!-- Luz -->
         <div class="sensor-card">
           <div class="sensor-card-top">☀️ <span>Luz Ambiente</span></div>
           <div class="sensor-card-subtitle" id="luzSubtitle">LDR</div>
@@ -624,8 +580,8 @@
       <p class="data-item"><span>Dosis inicial hecha:</span> <span id="dosisInicialHecha">--</span></p>
     </div>
 
-    <div class="section-card">
-      <h2 class="section-title">Alerta EC alto</h2>
+    <div id="seccionAlertaEC" style="display:none;" class="section-card">
+      <h2 class="section-title">⚠️ Alerta EC alto</h2>
       <div class="alert-box">
         <p class="data-item"><span>Etapa:</span> <span id="alertaEtapa">--</span></p>
         <p class="data-item"><span>Agua a retirar:</span> <span id="aguaRetirar">--</span></p>
@@ -659,28 +615,24 @@
     function textoCalibrado(v) { return activo(v) ? "Calibrado" : "Sin calibrar"; }
     function valorSeguro(v, fallback = "--") { return v === undefined || v === null || v === "" ? fallback : v; }
 
-    // ===== BARRA PROGRESO pH =====
     function actualizarBarraPH(phVal, phMinVal, phMaxVal) {
       const min = 0, max = 14;
       const rangoIzq = ((phMinVal - min) / (max - min)) * 100;
       const rangAncho = ((phMaxVal - phMinVal) / (max - min)) * 100;
       const pos = Math.max(0, Math.min(100, ((phVal - min) / (max - min)) * 100));
       const enRango = phVal >= phMinVal && phVal <= phMaxVal;
-
       $("phRango").style.left = rangoIzq + "%";
       $("phRango").style.width = rangAncho + "%";
       $("phIndicador").style.left = pos + "%";
       $("phIndicador").className = "sensor-progress-indicator" + (enRango ? "" : " fuera");
     }
 
-    // ===== BARRA PROGRESO EC =====
     function actualizarBarraEC(ecVal, ecMinVal, ecMaxVal) {
       const min = 0, max = 1500;
       const rangoIzq = ((ecMinVal - min) / (max - min)) * 100;
       const rangAncho = ((ecMaxVal - ecMinVal) / (max - min)) * 100;
       const pos = Math.max(0, Math.min(100, ((ecVal - min) / (max - min)) * 100));
       const enRango = ecVal >= ecMinVal && ecVal <= ecMaxVal;
-
       $("ecRango").style.left = rangoIzq + "%";
       $("ecRango").style.width = rangAncho + "%";
       $("ecIndicador").style.left = pos + "%";
@@ -690,18 +642,22 @@
       $("ecRangoTexto").textContent = ecMinVal + " - " + ecMaxVal + " ppm";
     }
 
-    // ===== BANNER ALERTA EC =====
     function actualizarBannerAlerta(alertas) {
       const banner = $("bannerAlertaEC");
+      const seccion = $("seccionAlertaEC");
       const activa = activo(alertas.activa);
-
       if (activa) {
         $("bannerEtapa").textContent = valorSeguro(alertas.etapa);
         $("bannerAguaRetirar").textContent = valorSeguro(alertas.agua_retirar_ml);
         $("bannerAguaReponer").textContent = valorSeguro(alertas.agua_reponer_ml);
+        $("alertaEtapa").textContent = valorSeguro(alertas.etapa);
+        $("aguaRetirar").textContent = valorSeguro(alertas.agua_retirar_ml);
+        $("aguaReponer").textContent = valorSeguro(alertas.agua_reponer_ml);
         banner.classList.add("visible");
+        seccion.style.display = "block";
       } else {
         banner.classList.remove("visible");
+        seccion.style.display = "none";
       }
     }
 
@@ -709,13 +665,8 @@
       const phConectado = activo(estado.sensor_ph_conectado);
       const ecConectado = activo(estado.sensor_ec_conectado);
       const luzConectado = activo(estado.sensor_luz_conectado);
-
-      $("phSubtitle").textContent = phConectado
-        ? (activo(estado.ph_calibrado) ? "PH4502C (Calibrado)" : "PH4502C (Sin calibrar)")
-        : "PH4502C (Desconectado)";
-
+      $("phSubtitle").textContent = phConectado ? (activo(estado.ph_calibrado) ? "PH4502C (Calibrado)" : "PH4502C (Sin calibrar)") : "PH4502C (Desconectado)";
       $("ecSubtitle").textContent = ecConectado ? "SEN0244 (Conectado)" : "SEN0244 (Desconectado - Sin datos)";
-
       const luzVal = Number(sensores.luz ?? 0);
       let luzTexto = "LDR";
       if (!luzConectado) luzTexto = "LDR (Desconectado)";
@@ -723,7 +674,6 @@
       else if (luzVal <= 500) luzTexto = "LDR - Poca luz";
       else luzTexto = "LDR - Buena luz";
       $("luzSubtitle").textContent = luzTexto;
-
       $("phBadge").textContent = phConectado ? "Activo" : "Alerta";
       $("ecBadge").textContent = ecConectado ? "Activo" : "Alerta";
       $("luzBadge").textContent = luzConectado ? "Activo" : "Alerta";
@@ -738,7 +688,6 @@
         NutrienteA: activo(estado.bomba_nutrienteA),
         NutrienteB: activo(estado.bomba_nutrienteB),
       };
-
       for (const [nombre, on] of Object.entries(bombas)) {
         $("estado" + nombre + "Card").textContent = on ? "ON" : "OFF";
         $("estado" + nombre + "Card").className = on ? "actuator-status on" : "actuator-status off";
@@ -752,19 +701,8 @@
       const ctx = document.getElementById(idCanvas).getContext("2d");
       return new Chart(ctx, {
         type: "line",
-        data: {
-          labels: [],
-          datasets: [{
-            label, data: [],
-            borderColor: colorLinea, backgroundColor: colorLinea,
-            borderWidth: 2, tension: 0.3, pointRadius: 3, pointHoverRadius: 5, fill: false
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { display: false } }, y: { beginAtZero } }
-        }
+        data: { labels: [], datasets: [{ label, data: [], borderColor: colorLinea, backgroundColor: colorLinea, borderWidth: 2, tension: 0.3, pointRadius: 3, pointHoverRadius: 5, fill: false }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero } } }
       });
     }
 
@@ -778,10 +716,7 @@
       if (fecha && hora) return `${fecha} ${hora}`;
       if (hora) return hora;
       if (fecha) return fecha;
-      if (item?.timestamp) {
-        const d = new Date(Number(item.timestamp) * 1000);
-        return d.toLocaleString("es-CO");
-      }
+      if (item?.timestamp) { const d = new Date(Number(item.timestamp) * 1000); return d.toLocaleString("es-CO"); }
       return "--";
     }
 
@@ -826,24 +761,19 @@
       $("phValor").textContent = valorSeguro(sensores.ph);
       $("ecValor").textContent = valorSeguro(sensores.ec);
       $("luzValor").textContent = valorSeguro(sensores.luz);
-
       $("phMin").textContent = valorSeguro(config.ph_min);
       $("phMax").textContent = valorSeguro(config.ph_max);
       $("ecMin").textContent = valorSeguro(config.ec_min);
       $("ecMax").textContent = valorSeguro(config.ec_max);
       $("litrosAgua").textContent = valorSeguro(config.litros_agua);
-
       $("diasCultivo").textContent = valorSeguro(cultivo.dias_cultivo);
       $("etapaCultivo").textContent = valorSeguro(cultivo.etapa);
       $("fechaInicioCultivo").textContent = valorSeguro(cultivo.fecha_inicio_cultivo);
-
       $("sistemaActivo").textContent = textoSiNo(estado.sistema_activo);
       $("sistemaListo").textContent = textoSiNo(estado.sistema_listo);
       $("dosisInicialHecha").textContent = textoSiNo(estado.dosis_inicial_hecha);
-
       $("phCalibrado").textContent = textoCalibrado(estado.ph_calibrado);
       $("ecCalibrado").textContent = textoCalibrado(estado.ec_calibrado);
-
       $("phSensorEstado").textContent = textoConectado(estado.sensor_ph_conectado);
       $("phSensorEstado").className = activo(estado.sensor_ph_conectado) ? "status-value green" : "status-value red";
       $("tdsSensorEstado").textContent = textoConectado(estado.sensor_ec_conectado);
@@ -853,15 +783,8 @@
 
       actualizarTarjetasSensores(estado, sensores);
       actualizarTarjetasActuadores(estado);
-
-      // Barras de progreso
       actualizarBarraPH(phVal, phMinVal, phMaxVal);
       actualizarBarraEC(ecVal, ecMinVal, ecMaxVal);
-
-      // Alerta EC
-      $("alertaEtapa").textContent = valorSeguro(alertas.etapa);
-      $("aguaRetirar").textContent = valorSeguro(alertas.agua_retirar_ml);
-      $("aguaReponer").textContent = valorSeguro(alertas.agua_reponer_ml);
       actualizarBannerAlerta(alertas);
 
       const ultima = valorSeguro(estado.ultima_actualizacion, "");
@@ -869,19 +792,13 @@
     });
 
     const historicoPhRef = ref(db, "cultivo_vertical/historico_series/ph");
-    onValue(historicoPhRef, (snapshot) => {
-      actualizarGraficoDesdeFirebase(chartPh, prepararSerieHistorica(snapshot.val()));
-    });
+    onValue(historicoPhRef, (snapshot) => { actualizarGraficoDesdeFirebase(chartPh, prepararSerieHistorica(snapshot.val())); });
 
     const historicoEcRef = ref(db, "cultivo_vertical/historico_series/ec");
-    onValue(historicoEcRef, (snapshot) => {
-      actualizarGraficoDesdeFirebase(chartTds, prepararSerieHistorica(snapshot.val()));
-    });
+    onValue(historicoEcRef, (snapshot) => { actualizarGraficoDesdeFirebase(chartTds, prepararSerieHistorica(snapshot.val())); });
 
     const historicoLuzRef = ref(db, "cultivo_vertical/historico_series/luz");
-    onValue(historicoLuzRef, (snapshot) => {
-      actualizarGraficoDesdeFirebase(chartLuz, prepararSerieHistorica(snapshot.val()));
-    });
+    onValue(historicoLuzRef, (snapshot) => { actualizarGraficoDesdeFirebase(chartLuz, prepararSerieHistorica(snapshot.val())); });
   </script>
 </body>
 </html>
