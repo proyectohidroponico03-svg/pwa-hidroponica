@@ -331,7 +331,7 @@
       </div>
 
       <div class="status-time">
-        Última actualización web: <span id="ultimaActualizacion">--</span>
+        Última actualización: <span id="ultimaActualizacion">--</span>
       </div>
     </div>
 
@@ -446,11 +446,12 @@
     window.showData = function () {
       document.getElementById("hero").style.display = "none";
       document.getElementById("sensorData").style.display = "block";
+
       setTimeout(() => {
-        if (chartPh) chartPh.resize();
-        if (chartTds) chartTds.resize();
-        if (chartLuz) chartLuz.resize();
-      }, 200);
+        chartPh.resize();
+        chartTds.resize();
+        chartLuz.resize();
+      }, 250);
     };
 
     window.goBack = function () {
@@ -482,11 +483,6 @@
 
     function valorSeguro(v, fallback = "--") {
       return v === undefined || v === null || v === "" ? fallback : v;
-    }
-
-    function actualizarHoraWeb() {
-      const ahora = new Date();
-      $("ultimaActualizacion").textContent = ahora.toLocaleString("es-CO");
     }
 
     function actualizarTarjetasSensores(estado, sensores) {
@@ -522,26 +518,7 @@
       $("luzBadge").textContent = luzConectado ? "Activo" : "Alerta";
     }
 
-    const maxPuntosHistorial = 10;
-    let ultimoRegistroHistorial = 0;
-    const intervaloHistorialMs = 10000;
-
-    const labelsHistorial = [];
-    const datosPH = [];
-    const datosTDS = [];
-    const datosLuz = [];
-
-    function agregarDatoSerie(serie, valor) {
-      serie.push(valor);
-      if (serie.length > maxPuntosHistorial) serie.shift();
-    }
-
-    function agregarLabelHistorial(label) {
-      labelsHistorial.push(label);
-      if (labelsHistorial.length > maxPuntosHistorial) labelsHistorial.shift();
-    }
-
-    function crearGrafico(idCanvas, label, colorLinea) {
+    function crearGrafico(idCanvas, label, colorLinea, beginAtZero = true) {
       const ctx = document.getElementById(idCanvas).getContext("2d");
 
       return new Chart(ctx, {
@@ -571,48 +548,50 @@
               grid: { display: false }
             },
             y: {
-              beginAtZero: true
+              beginAtZero
             }
           }
         }
       });
     }
 
-    const chartPh = crearGrafico("chartPh", "pH", "#4caf50");
-    const chartTds = crearGrafico("chartTds", "TDS", "#4285f4");
-    const chartLuz = crearGrafico("chartLuz", "Luz", "#fbbc04");
+    const chartPh = crearGrafico("chartPh", "pH", "#4caf50", false);
+    const chartTds = crearGrafico("chartTds", "TDS", "#4285f4", true);
+    const chartLuz = crearGrafico("chartLuz", "Luz", "#fbbc04", true);
 
-    function actualizarGraficos() {
-      chartPh.data.labels = [...labelsHistorial];
-      chartTds.data.labels = [...labelsHistorial];
-      chartLuz.data.labels = [...labelsHistorial];
+    function formatearLabelHistorial(item) {
+      const fecha = item?.fecha || "";
+      const hora = item?.hora || "";
 
-      chartPh.data.datasets[0].data = [...datosPH];
-      chartTds.data.datasets[0].data = [...datosTDS];
-      chartLuz.data.datasets[0].data = [...datosLuz];
+      if (fecha && hora) return `${fecha} ${hora}`;
+      if (hora) return hora;
+      if (fecha) return fecha;
 
-      chartPh.update();
-      chartTds.update();
-      chartLuz.update();
+      if (item?.timestamp) {
+        const d = new Date(Number(item.timestamp) * 1000);
+        return d.toLocaleString("es-CO");
+      }
+
+      return "--";
     }
 
-    function registrarHistorial(ph, ec, luz) {
-      const ahora = Date.now();
+    function prepararSerieHistorica(obj) {
+      if (!obj) return [];
 
-      if (ahora - ultimoRegistroHistorial < intervaloHistorialMs) return;
-      ultimoRegistroHistorial = ahora;
+      return Object.values(obj)
+        .filter(item => item && item.valor !== undefined && item.valor !== null)
+        .sort((a, b) => Number(a.timestamp || 0) - Number(b.timestamp || 0))
+        .slice(-20)
+        .map(item => ({
+          label: formatearLabelHistorial(item),
+          valor: Number(item.valor || 0)
+        }));
+    }
 
-      const hora = new Date().toLocaleTimeString("es-CO", {
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-
-      agregarLabelHistorial(hora);
-      agregarDatoSerie(datosPH, Number(ph ?? 0));
-      agregarDatoSerie(datosTDS, Number(ec ?? 0));
-      agregarDatoSerie(datosLuz, Number(luz ?? 0));
-
-      actualizarGraficos();
+    function actualizarGraficoDesdeFirebase(chart, serie) {
+      chart.data.labels = serie.map(p => p.label);
+      chart.data.datasets[0].data = serie.map(p => p.valor);
+      chart.update();
     }
 
     const connectedRef = ref(db, ".info/connected");
@@ -679,8 +658,30 @@
       $("aguaReponer").textContent = valorSeguro(alertas.agua_reponer_ml);
       $("alertaMensaje").textContent = valorSeguro(alertas.mensaje);
 
-      registrarHistorial(sensores.ph, sensores.ec, sensores.luz);
-      actualizarHoraWeb();
+      const ultima = valorSeguro(estado.ultima_actualizacion, "");
+      if (ultima) {
+        $("ultimaActualizacion").textContent = ultima;
+      } else {
+        $("ultimaActualizacion").textContent = new Date().toLocaleString("es-CO");
+      }
+    });
+
+    const historicoPhRef = ref(db, "cultivo_vertical/historico_series/ph");
+    onValue(historicoPhRef, (snapshot) => {
+      const serie = prepararSerieHistorica(snapshot.val());
+      actualizarGraficoDesdeFirebase(chartPh, serie);
+    });
+
+    const historicoEcRef = ref(db, "cultivo_vertical/historico_series/ec");
+    onValue(historicoEcRef, (snapshot) => {
+      const serie = prepararSerieHistorica(snapshot.val());
+      actualizarGraficoDesdeFirebase(chartTds, serie);
+    });
+
+    const historicoLuzRef = ref(db, "cultivo_vertical/historico_series/luz");
+    onValue(historicoLuzRef, (snapshot) => {
+      const serie = prepararSerieHistorica(snapshot.val());
+      actualizarGraficoDesdeFirebase(chartLuz, serie);
     });
   </script>
 </body>
