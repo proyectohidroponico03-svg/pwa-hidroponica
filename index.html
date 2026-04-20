@@ -489,6 +489,27 @@
           <div class="actuator-subtitle">Dosificación para aumentar pH</div>
           <div id="estadoBaseCard" class="actuator-status">--</div>
         </div>
+
+        <div class="actuator-card">
+          <div id="iconAgua" class="actuator-icon">⏻</div>
+          <div class="actuator-title">Bomba de Agua</div>
+          <div class="actuator-subtitle">Reposición y ajuste del nivel de agua</div>
+          <div id="estadoAguaCard" class="actuator-status">--</div>
+        </div>
+
+        <div class="actuator-card">
+          <div id="iconNutrienteA" class="actuator-icon">⏻</div>
+          <div class="actuator-title">Bomba Nutriente A</div>
+          <div class="actuator-subtitle">Dosificación de nutriente A</div>
+          <div id="estadoNutrienteACard" class="actuator-status">--</div>
+        </div>
+
+        <div class="actuator-card">
+          <div id="iconNutrienteB" class="actuator-icon">⏻</div>
+          <div class="actuator-title">Bomba Nutriente B</div>
+          <div class="actuator-subtitle">Dosificación de nutriente B</div>
+          <div id="estadoNutrienteBCard" class="actuator-status">--</div>
+        </div>
       </div>
     </div>
 
@@ -566,7 +587,7 @@
     }
 
     function textoOnOff(v) {
-      return activo(v) ? "On" : "Off";
+      return activo(v) ? "Off".replace("Off", "On") : "Off";
     }
 
     function textoSiNo(v) {
@@ -622,18 +643,30 @@
       const recirculacionOn = activo(estado.bomba_recirculacion);
       const acidoOn = activo(estado.bomba_acido);
       const baseOn = activo(estado.bomba_base);
+      const aguaOn = activo(estado.bomba_agua);
+      const nutrienteAOn = activo(estado.bomba_nutrienteA);
+      const nutrienteBOn = activo(estado.bomba_nutrienteB);
 
       $("estadoRecirculacionCard").textContent = recirculacionOn ? "ON" : "OFF";
       $("estadoAcidoCard").textContent = acidoOn ? "ON" : "OFF";
       $("estadoBaseCard").textContent = baseOn ? "ON" : "OFF";
+      $("estadoAguaCard").textContent = aguaOn ? "ON" : "OFF";
+      $("estadoNutrienteACard").textContent = nutrienteAOn ? "ON" : "OFF";
+      $("estadoNutrienteBCard").textContent = nutrienteBOn ? "ON" : "OFF";
 
       $("estadoRecirculacionCard").className = recirculacionOn ? "actuator-status on" : "actuator-status off";
       $("estadoAcidoCard").className = acidoOn ? "actuator-status on" : "actuator-status off";
       $("estadoBaseCard").className = baseOn ? "actuator-status on" : "actuator-status off";
+      $("estadoAguaCard").className = aguaOn ? "actuator-status on" : "actuator-status off";
+      $("estadoNutrienteACard").className = nutrienteAOn ? "actuator-status on" : "actuator-status off";
+      $("estadoNutrienteBCard").className = nutrienteBOn ? "actuator-status on" : "actuator-status off";
 
       $("iconRecirculacion").className = recirculacionOn ? "actuator-icon on" : "actuator-icon";
       $("iconAcido").className = acidoOn ? "actuator-icon on" : "actuator-icon";
       $("iconBase").className = baseOn ? "actuator-icon on" : "actuator-icon";
+      $("iconAgua").className = aguaOn ? "actuator-icon on" : "actuator-icon";
+      $("iconNutrienteA").className = nutrienteAOn ? "actuator-icon on" : "actuator-icon";
+      $("iconNutrienteB").className = nutrienteBOn ? "actuator-icon on" : "actuator-icon";
     }
 
     function crearGrafico(idCanvas, label, colorLinea, beginAtZero = true) {
