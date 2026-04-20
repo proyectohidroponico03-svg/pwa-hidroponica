@@ -165,6 +165,63 @@
       margin-top: 15px;
     }
 
+    .cultivo-panel {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px 22px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      margin-bottom: 20px;
+    }
+
+    .cultivo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .cultivo-card {
+      background: #f8fbf8;
+      border: 1px solid #e7eee7;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cultivo-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #e7f8ea;
+      color: #2eaf4a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .cultivo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .cultivo-label {
+      font-size: 0.9em;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .cultivo-value {
+      font-size: 1.05em;
+      color: #1f1f1f;
+      font-weight: 700;
+    }
+
     .sensor-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -344,6 +401,10 @@
     }
 
     @media (max-width: 1024px) {
+      .cultivo-grid {
+        grid-template-columns: 1fr;
+      }
+
       .actuator-grid {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -367,14 +428,16 @@
       }
 
       .section-card,
-      .status-panel {
+      .status-panel,
+      .cultivo-panel {
         padding: 16px;
       }
 
       .status-grid,
       .sensor-cards,
       .history-grid,
-      .actuator-grid {
+      .actuator-grid,
+      .cultivo-grid {
         grid-template-columns: 1fr;
       }
 
@@ -441,6 +504,36 @@
 
       <div class="status-time">
         Última actualización: <span id="ultimaActualizacion">--</span>
+      </div>
+    </div>
+
+    <div class="cultivo-panel">
+      <h2 class="section-title">Cultivo</h2>
+
+      <div class="cultivo-grid">
+        <div class="cultivo-card">
+          <div class="cultivo-icon">📅</div>
+          <div class="cultivo-text">
+            <div class="cultivo-label">Días de cultivo</div>
+            <div class="cultivo-value" id="diasCultivo">--</div>
+          </div>
+        </div>
+
+        <div class="cultivo-card">
+          <div class="cultivo-icon">🌱</div>
+          <div class="cultivo-text">
+            <div class="cultivo-label">Etapa</div>
+            <div class="cultivo-value" id="etapaCultivo">--</div>
+          </div>
+        </div>
+
+        <div class="cultivo-card">
+          <div class="cultivo-icon">🗓️</div>
+          <div class="cultivo-text">
+            <div class="cultivo-label">Fecha de inicio</div>
+            <div class="cultivo-value" id="fechaInicioCultivo">--</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -564,13 +657,6 @@
           <div id="estadoNutrienteBCard" class="actuator-status">--</div>
         </div>
       </div>
-    </div>
-
-    <div class="section-card">
-      <h2 class="section-title">Cultivo</h2>
-      <p class="data-item"><span>Días de cultivo:</span> <span id="diasCultivo">--</span></p>
-      <p class="data-item"><span>Etapa:</span> <span id="etapaCultivo">--</span></p>
-      <p class="data-item"><span>Fecha inicio:</span> <span id="fechaInicioCultivo">--</span></p>
     </div>
 
     <div class="section-card">
@@ -882,5 +968,7 @@
       actualizarGraficoDesdeFirebase(chartLuz, serie);
     });
   </script>
+</body>
+</html>
 </body>
 </html>
