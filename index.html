@@ -258,7 +258,7 @@
 
     .actuator-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(3, minmax(260px, 1fr));
       gap: 16px;
       margin-top: 10px;
     }
@@ -315,6 +315,12 @@
 
     .actuator-status.off {
       color: #8f8f8f;
+    }
+
+    @media (max-width: 1024px) {
+      .actuator-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     @media (max-width: 768px) {
@@ -587,7 +593,7 @@
     }
 
     function textoOnOff(v) {
-      return activo(v) ? "Off".replace("Off", "On") : "Off";
+      return activo(v) ? "On" : "Off";
     }
 
     function textoSiNo(v) {
@@ -836,6 +842,9 @@
       const serie = prepararSerieHistorica(snapshot.val());
       actualizarGraficoDesdeFirebase(chartLuz, serie);
     });
+  </script>
+</body>
+</html>
   </script>
 </body>
 </html>
