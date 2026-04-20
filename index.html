@@ -231,7 +231,7 @@
 
     .history-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(3, minmax(320px, 1fr));
       gap: 16px;
       margin-top: 10px;
     }
@@ -254,6 +254,32 @@
     .history-card canvas {
       width: 100% !important;
       height: 220px !important;
+    }
+
+    .history-config {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: #f8fbf8;
+      border: 1px solid #e7eee7;
+      border-radius: 12px;
+      text-align: left;
+    }
+
+    .history-config-title {
+      font-size: 0.95em;
+      font-weight: 700;
+      color: #33a047;
+      margin-bottom: 8px;
+    }
+
+    .history-config-item {
+      font-size: 0.9em;
+      margin: 5px 0;
+      color: #333;
+    }
+
+    .history-config-item span {
+      font-weight: 700;
     }
 
     .actuator-grid {
@@ -320,6 +346,10 @@
     @media (max-width: 1024px) {
       .actuator-grid {
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      .history-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -457,16 +487,33 @@
         <div class="history-card">
           <h3 class="history-title">Historial de pH</h3>
           <canvas id="chartPh"></canvas>
+
+          <div class="history-config">
+            <div class="history-config-title">Configuración de pH</div>
+            <div class="history-config-item"><span>pH mínimo:</span> <span id="phMin">--</span></div>
+            <div class="history-config-item"><span>pH máximo:</span> <span id="phMax">--</span></div>
+          </div>
         </div>
 
         <div class="history-card">
           <h3 class="history-title">Historial de TDS</h3>
           <canvas id="chartTds"></canvas>
+
+          <div class="history-config">
+            <div class="history-config-title">Configuración de EC/TDS</div>
+            <div class="history-config-item"><span>EC mínimo:</span> <span id="ecMin">--</span></div>
+            <div class="history-config-item"><span>EC máximo:</span> <span id="ecMax">--</span></div>
+          </div>
         </div>
 
         <div class="history-card">
           <h3 class="history-title">Historial de Luz</h3>
           <canvas id="chartLuz"></canvas>
+
+          <div class="history-config">
+            <div class="history-config-title">Configuración general</div>
+            <div class="history-config-item"><span>Litros de agua:</span> <span id="litrosAgua">--</span></div>
+          </div>
         </div>
       </div>
     </div>
@@ -517,15 +564,6 @@
           <div id="estadoNutrienteBCard" class="actuator-status">--</div>
         </div>
       </div>
-    </div>
-
-    <div class="section-card">
-      <h2 class="section-title">Configuración</h2>
-      <p class="data-item"><span>pH mínimo:</span> <span id="phMin">--</span></p>
-      <p class="data-item"><span>pH máximo:</span> <span id="phMax">--</span></p>
-      <p class="data-item"><span>EC mínimo:</span> <span id="ecMin">--</span></p>
-      <p class="data-item"><span>EC máximo:</span> <span id="ecMax">--</span></p>
-      <p class="data-item"><span>Litros de agua:</span> <span id="litrosAgua">--</span></p>
     </div>
 
     <div class="section-card">
@@ -791,6 +829,7 @@
       $("bombaNutrienteA").textContent = textoOnOff(estado.bomba_nutrienteA);
       $("bombaNutrienteB").textContent = textoOnOff(estado.bomba_nutrienteB);
       $("bombaRecirculacion").textContent = textoOnOff(estado.bomba_recirculacion);
+
       $("sistemaActivo").textContent = textoSiNo(estado.sistema_activo);
       $("sistemaListo").textContent = textoSiNo(estado.sistema_listo);
       $("dosisInicialHecha").textContent = textoSiNo(estado.dosis_inicial_hecha);
@@ -842,9 +881,6 @@
       const serie = prepararSerieHistorica(snapshot.val());
       actualizarGraficoDesdeFirebase(chartLuz, serie);
     });
-  </script>
-</body>
-</html>
   </script>
 </body>
 </html>
