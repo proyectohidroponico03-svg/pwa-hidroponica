@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Monitoreo Hidropónico</title>
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <style>
+    * { box-sizing: border-box; }
+
     body {
       font-family: Arial, sans-serif;
       background: #eef3ef;
@@ -16,6 +16,57 @@
       color: #1f1f1f;
     }
 
+    /* ===== BANNER ALERTA EC ALTO ===== */
+    #bannerAlertaEC {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 9999;
+      background: linear-gradient(135deg, #ff6b00, #ff3d00);
+      color: white;
+      padding: 14px 20px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(255, 80, 0, 0.5);
+      animation: pulsoAlerta 1.5s ease-in-out infinite;
+    }
+
+    #bannerAlertaEC.visible {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    @keyframes pulsoAlerta {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+
+    .banner-icon { font-size: 1.6em; }
+
+    .banner-titulo {
+      font-size: 1.1em;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .banner-datos {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .banner-dato {
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 4px 12px;
+      font-size: 0.92em;
+      font-weight: 700;
+    }
+
+    /* ===== HERO ===== */
     .hero {
       background-color: #4caf50;
       color: white;
@@ -23,18 +74,10 @@
       text-align: center;
     }
 
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 0.5em;
-    }
+    h1 { font-size: 2.5em; margin-bottom: 0.5em; }
+    .hero p { font-size: 1.2em; margin-top: 0.5em; }
 
-    .hero p {
-      font-size: 1.2em;
-      margin-top: 0.5em;
-    }
-
-    .btn,
-    .access-btn {
+    .btn, .access-btn {
       padding: 15px 30px;
       margin-top: 30px;
       font-size: 1.2em;
@@ -46,10 +89,7 @@
       text-align: center;
     }
 
-    .btn:hover,
-    .access-btn:hover {
-      background-color: #45a049;
-    }
+    .btn:hover, .access-btn:hover { background-color: #45a049; }
 
     .content {
       margin: 24px;
@@ -57,11 +97,12 @@
       padding: 0;
     }
 
+    /* ===== CARDS GENERALES ===== */
     .section-card {
       background: #ffffff;
       border-radius: 16px;
       padding: 22px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
       margin-bottom: 20px;
     }
 
@@ -71,26 +112,18 @@
       color: #33a047;
     }
 
-    .data-item {
-      margin: 6px 0;
-      font-size: 1.15em;
-    }
-
-    .data-item span {
-      font-weight: bold;
-    }
-
     .access-btn {
       display: block;
       width: 220px;
       margin: 30px auto 0;
     }
 
+    /* ===== STATUS PANEL ===== */
     .status-panel {
       background: #ffffff;
       border-radius: 16px;
       padding: 20px 22px 14px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
       margin-bottom: 20px;
     }
 
@@ -116,60 +149,21 @@
       background: #f8fbf8;
     }
 
-    .status-icon {
-      font-size: 18px;
-      line-height: 1;
-      margin-top: 2px;
-    }
+    .status-icon { font-size: 18px; line-height: 1; margin-top: 2px; }
+    .status-text { display: flex; flex-direction: column; gap: 2px; }
+    .status-label { font-size: 0.92em; color: #666; font-weight: 600; }
+    .status-value { font-size: 0.95em; font-weight: 700; }
+    .status-time { margin-top: 14px; font-size: 0.85em; color: #8a8a8a; }
+    .green { color: #2eaf4a; }
+    .red { color: #e53935; }
+    .blue { color: #1e88e5; }
 
-    .status-text {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .status-label {
-      font-size: 0.92em;
-      color: #666;
-      font-weight: 600;
-    }
-
-    .status-value {
-      font-size: 0.95em;
-      font-weight: 700;
-    }
-
-    .status-time {
-      margin-top: 14px;
-      font-size: 0.85em;
-      color: #8a8a8a;
-    }
-
-    .green {
-      color: #2eaf4a;
-    }
-
-    .red {
-      color: #e53935;
-    }
-
-    .blue {
-      color: #1e88e5;
-    }
-
-    .alert-box {
-      background: #fff8e1;
-      border: 1px solid #ffb300;
-      padding: 15px;
-      border-radius: 12px;
-      margin-top: 15px;
-    }
-
+    /* ===== CULTIVO ===== */
     .cultivo-panel {
       background: #ffffff;
       border-radius: 16px;
       padding: 20px 22px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
       margin-bottom: 20px;
     }
 
@@ -191,37 +185,19 @@
     }
 
     .cultivo-icon {
-      width: 42px;
-      height: 42px;
+      width: 42px; height: 42px;
       border-radius: 50%;
       background: #e7f8ea;
       color: #2eaf4a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      font-weight: bold;
-      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: bold; flex-shrink: 0;
     }
 
-    .cultivo-text {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
+    .cultivo-text { display: flex; flex-direction: column; gap: 3px; }
+    .cultivo-label { font-size: 0.9em; color: #666; font-weight: 600; }
+    .cultivo-value { font-size: 1.05em; color: #1f1f1f; font-weight: 700; }
 
-    .cultivo-label {
-      font-size: 0.9em;
-      color: #666;
-      font-weight: 600;
-    }
-
-    .cultivo-value {
-      font-size: 1.05em;
-      color: #1f1f1f;
-      font-weight: 700;
-    }
-
+    /* ===== SENSORES ===== */
     .sensor-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -235,57 +211,80 @@
       border-radius: 16px;
       padding: 18px 16px;
       text-align: center;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
     .sensor-card-top {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      margin-bottom: 4px;
-      font-size: 0.95em;
-      font-weight: 700;
-      color: #666;
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; margin-bottom: 4px;
+      font-size: 0.95em; font-weight: 700; color: #666;
     }
 
-    .sensor-card-subtitle {
-      font-size: 0.78em;
-      color: #8b8b8b;
-      margin-bottom: 6px;
-    }
+    .sensor-card-subtitle { font-size: 0.78em; color: #8b8b8b; margin-bottom: 6px; }
 
     .sensor-alerta {
       display: inline-block;
-      background: #ffe9b3;
-      color: #b97700;
-      font-size: 0.75em;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 999px;
-      margin-bottom: 10px;
+      background: #ffe9b3; color: #b97700;
+      font-size: 0.75em; font-weight: 700;
+      padding: 3px 10px; border-radius: 999px; margin-bottom: 10px;
     }
 
     .sensor-main-value {
-      font-size: 2.1em;
-      font-weight: 800;
-      color: #1f1f1f;
-      line-height: 1.1;
+      font-size: 2.1em; font-weight: 800;
+      color: #1f1f1f; line-height: 1.1;
     }
 
-    .sensor-unit {
-      font-size: 0.55em;
-      font-weight: 700;
-      color: #555;
-      margin-left: 4px;
+    .sensor-unit { font-size: 0.55em; font-weight: 700; color: #555; margin-left: 4px; }
+    .sensor-range { margin-top: 8px; font-size: 0.78em; color: #7c7c7c; }
+
+    /* ===== BARRA DE PROGRESO SENSORES ===== */
+    .sensor-progress-wrap {
+      margin-top: 12px;
+      padding: 0 4px;
     }
 
-    .sensor-range {
-      margin-top: 8px;
-      font-size: 0.78em;
-      color: #7c7c7c;
+    .sensor-progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72em;
+      color: #999;
+      margin-bottom: 4px;
     }
 
+    .sensor-progress-bar-bg {
+      background: #e8e8e8;
+      border-radius: 999px;
+      height: 10px;
+      position: relative;
+      overflow: visible;
+    }
+
+    .sensor-progress-rango {
+      position: absolute;
+      top: 0; height: 100%;
+      background: #c8f0cc;
+      border-radius: 999px;
+    }
+
+    .sensor-progress-indicator {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: #2eaf4a;
+      border: 2px solid white;
+      box-shadow: 0 0 0 2px #2eaf4a;
+      transition: left 0.5s ease;
+      z-index: 2;
+    }
+
+    .sensor-progress-indicator.fuera {
+      background: #e53935;
+      box-shadow: 0 0 0 2px #e53935;
+    }
+
+    /* ===== HISTORIAL ===== */
     .history-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(320px, 1fr));
@@ -298,47 +297,23 @@
       border: 1px solid #ece9df;
       border-radius: 16px;
       padding: 16px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
-    .history-title {
-      margin: 0 0 12px 0;
-      font-size: 1.05em;
-      color: #333;
-      font-weight: 700;
-    }
-
-    .history-card canvas {
-      width: 100% !important;
-      height: 220px !important;
-    }
+    .history-title { margin: 0 0 12px 0; font-size: 1.05em; color: #333; font-weight: 700; }
+    .history-card canvas { width: 100% !important; height: 220px !important; }
 
     .history-config {
-      margin-top: 14px;
-      padding: 12px 14px;
-      background: #f8fbf8;
-      border: 1px solid #e7eee7;
-      border-radius: 12px;
-      text-align: left;
+      margin-top: 14px; padding: 12px 14px;
+      background: #f8fbf8; border: 1px solid #e7eee7;
+      border-radius: 12px; text-align: left;
     }
 
-    .history-config-title {
-      font-size: 0.95em;
-      font-weight: 700;
-      color: #33a047;
-      margin-bottom: 8px;
-    }
+    .history-config-title { font-size: 0.95em; font-weight: 700; color: #33a047; margin-bottom: 8px; }
+    .history-config-item { font-size: 0.9em; margin: 5px 0; color: #333; }
+    .history-config-item span { font-weight: 700; }
 
-    .history-config-item {
-      font-size: 0.9em;
-      margin: 5px 0;
-      color: #333;
-    }
-
-    .history-config-item span {
-      font-weight: 700;
-    }
-
+    /* ===== ACTUADORES ===== */
     .actuator-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(260px, 1fr));
@@ -352,104 +327,85 @@
       border-radius: 16px;
       padding: 20px 16px;
       text-align: center;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .actuator-card.bomba-on {
+      border-color: #2eaf4a;
+      box-shadow: 0 0 0 2px #2eaf4a33, 0 4px 16px rgba(46,175,74,0.15);
     }
 
     .actuator-icon {
-      width: 42px;
-      height: 42px;
+      width: 42px; height: 42px;
       margin: 0 auto 10px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #f1f3ef;
-      color: #9aa19a;
-      font-size: 20px;
-      font-weight: bold;
+      display: flex; align-items: center; justify-content: center;
+      background: #f1f3ef; color: #9aa19a;
+      font-size: 20px; font-weight: bold;
+      transition: background 0.3s, color 0.3s;
     }
 
     .actuator-icon.on {
       background: #e7f8ea;
       color: #2eaf4a;
+      animation: pulsoVerde 1.2s ease-in-out infinite;
     }
 
-    .actuator-title {
-      font-size: 0.98em;
-      font-weight: 700;
-      color: #333;
-      margin-bottom: 4px;
+    @keyframes pulsoVerde {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(46,175,74,0.5); }
+      50% { box-shadow: 0 0 0 10px rgba(46,175,74,0); }
     }
 
-    .actuator-subtitle {
-      font-size: 0.78em;
-      color: #8b8b8b;
-      margin-bottom: 10px;
+    .actuator-title { font-size: 0.98em; font-weight: 700; color: #333; margin-bottom: 4px; }
+    .actuator-subtitle { font-size: 0.78em; color: #8b8b8b; margin-bottom: 10px; }
+    .actuator-status { font-size: 0.9em; font-weight: 700; }
+    .actuator-status.on { color: #2eaf4a; }
+    .actuator-status.off { color: #8f8f8f; }
+
+    /* ===== ALERTA EC ALTO (sección abajo simplificada) ===== */
+    .alert-box {
+      background: #fff8e1;
+      border: 1px solid #ffb300;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 15px;
     }
 
-    .actuator-status {
-      font-size: 0.9em;
-      font-weight: 700;
-    }
+    .data-item { margin: 6px 0; font-size: 1.15em; }
+    .data-item span { font-weight: bold; }
 
-    .actuator-status.on {
-      color: #2eaf4a;
-    }
-
-    .actuator-status.off {
-      color: #8f8f8f;
-    }
-
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 1024px) {
-      .cultivo-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .actuator-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .history-grid {
-        grid-template-columns: 1fr;
-      }
+      .cultivo-grid, .actuator-grid, .history-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 768px) {
-      .hero {
-        padding: 35px 20px;
-      }
-
-      h1 {
-        font-size: 2em;
-      }
-
-      .content {
-        margin: 14px;
-      }
-
-      .section-card,
-      .status-panel,
-      .cultivo-panel {
-        padding: 16px;
-      }
-
-      .status-grid,
-      .sensor-cards,
-      .history-grid,
-      .actuator-grid,
-      .cultivo-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .access-btn {
-        width: 100%;
-        max-width: 260px;
-      }
+      .hero { padding: 35px 20px; }
+      h1 { font-size: 2em; }
+      .content { margin: 14px; }
+      .section-card, .status-panel, .cultivo-panel { padding: 16px; }
+      .status-grid, .sensor-cards, .history-grid, .actuator-grid, .cultivo-grid { grid-template-columns: 1fr; }
+      .access-btn { width: 100%; max-width: 260px; }
+      #bannerAlertaEC.visible { flex-direction: column; gap: 8px; }
+      .banner-datos { gap: 8px; }
     }
   </style>
 </head>
 
 <body>
+
+  <!-- ===== BANNER ALERTA EC ALTO ===== -->
+  <div id="bannerAlertaEC">
+    <div class="banner-icon">⚠️</div>
+    <div class="banner-titulo">EC ALTO DETECTADO</div>
+    <div class="banner-datos">
+      <div class="banner-dato">Etapa: <span id="bannerEtapa">--</span></div>
+      <div class="banner-dato">Agua a retirar: <span id="bannerAguaRetirar">--</span> ml</div>
+      <div class="banner-dato">Agua a reponer: <span id="bannerAguaReponer">--</span> ml</div>
+    </div>
+  </div>
+
   <div class="hero" id="hero">
     <h1>Sistema Hidropónico</h1>
     <p>Monitoreo inteligente para tu cultivo de lechuga</p>
@@ -457,9 +413,9 @@
   </div>
 
   <div class="content" id="sensorData" style="display:none;">
+
     <div class="status-panel">
       <div class="status-title">Estado del Sistema</div>
-
       <div class="status-grid">
         <div class="status-card">
           <div class="status-icon green">📶</div>
@@ -468,7 +424,6 @@
             <div id="conexionEstado" class="status-value green">Cargando...</div>
           </div>
         </div>
-
         <div class="status-card">
           <div class="status-icon blue">⚙️</div>
           <div class="status-text">
@@ -476,7 +431,6 @@
             <div class="status-value blue">Monitoreo en tiempo real</div>
           </div>
         </div>
-
         <div class="status-card">
           <div class="status-icon green">🧪</div>
           <div class="status-text">
@@ -484,7 +438,6 @@
             <div id="phSensorEstado" class="status-value green">Cargando...</div>
           </div>
         </div>
-
         <div class="status-card">
           <div class="status-icon green">💧</div>
           <div class="status-text">
@@ -492,7 +445,6 @@
             <div id="tdsSensorEstado" class="status-value green">Cargando...</div>
           </div>
         </div>
-
         <div class="status-card">
           <div class="status-icon green">☀️</div>
           <div class="status-text">
@@ -501,15 +453,11 @@
           </div>
         </div>
       </div>
-
-      <div class="status-time">
-        Última actualización: <span id="ultimaActualizacion">--</span>
-      </div>
+      <div class="status-time">Última actualización: <span id="ultimaActualizacion">--</span></div>
     </div>
 
     <div class="cultivo-panel">
       <h2 class="section-title">Cultivo</h2>
-
       <div class="cultivo-grid">
         <div class="cultivo-card">
           <div class="cultivo-icon">📅</div>
@@ -518,7 +466,6 @@
             <div class="cultivo-value" id="diasCultivo">--</div>
           </div>
         </div>
-
         <div class="cultivo-card">
           <div class="cultivo-icon">🌱</div>
           <div class="cultivo-text">
@@ -526,7 +473,6 @@
             <div class="cultivo-value" id="etapaCultivo">--</div>
           </div>
         </div>
-
         <div class="cultivo-card">
           <div class="cultivo-icon">🗓️</div>
           <div class="cultivo-text">
@@ -539,8 +485,9 @@
 
     <div class="section-card">
       <h2 class="section-title">Sensores</h2>
-
       <div class="sensor-cards">
+
+        <!-- pH -->
         <div class="sensor-card">
           <div class="sensor-card-top">🧪 <span>pH</span></div>
           <div class="sensor-card-subtitle" id="phSubtitle">PH4502C</div>
@@ -548,9 +495,19 @@
           <div class="sensor-main-value">
             <span id="phValor">--</span><span class="sensor-unit">pH</span>
           </div>
-          <div class="sensor-range">Rango óptimo: 5.5 - 7.5</div>
+          <div class="sensor-range">Rango óptimo: 5.5 - 6.5</div>
+          <div class="sensor-progress-wrap">
+            <div class="sensor-progress-labels">
+              <span>0</span><span>5.5</span><span>6.5</span><span>14</span>
+            </div>
+            <div class="sensor-progress-bar-bg">
+              <div class="sensor-progress-rango" id="phRango"></div>
+              <div class="sensor-progress-indicator" id="phIndicador"></div>
+            </div>
+          </div>
         </div>
 
+        <!-- EC -->
         <div class="sensor-card">
           <div class="sensor-card-top">💧 <span>TDS/Conductividad</span></div>
           <div class="sensor-card-subtitle" id="ecSubtitle">SEN0244</div>
@@ -558,9 +515,19 @@
           <div class="sensor-main-value">
             <span id="ecValor">--</span><span class="sensor-unit">ppm</span>
           </div>
-          <div class="sensor-range">Rango óptimo: 400 - 1200 ppm</div>
+          <div class="sensor-range">Rango óptimo: <span id="ecRangoTexto">400 - 900 ppm</span></div>
+          <div class="sensor-progress-wrap">
+            <div class="sensor-progress-labels">
+              <span>0</span><span id="ecMinLabel">400</span><span id="ecMaxLabel">900</span><span>1500</span>
+            </div>
+            <div class="sensor-progress-bar-bg">
+              <div class="sensor-progress-rango" id="ecRango"></div>
+              <div class="sensor-progress-indicator" id="ecIndicador"></div>
+            </div>
+          </div>
         </div>
 
+        <!-- Luz -->
         <div class="sensor-card">
           <div class="sensor-card-top">☀️ <span>Luz Ambiente</span></div>
           <div class="sensor-card-subtitle" id="luzSubtitle">LDR</div>
@@ -570,17 +537,16 @@
           </div>
           <div class="sensor-range">Rango óptimo: Alto</div>
         </div>
+
       </div>
     </div>
 
     <div class="section-card">
       <h2 class="section-title">Historial</h2>
-
       <div class="history-grid">
         <div class="history-card">
           <h3 class="history-title">Historial de pH</h3>
           <canvas id="chartPh"></canvas>
-
           <div class="history-config">
             <div class="history-config-title">Configuración de pH</div>
             <div class="history-config-item"><span>pH mínimo:</span> <span id="phMin">--</span></div>
@@ -588,11 +554,9 @@
             <div class="history-config-item"><span>Estado de calibración:</span> <span id="phCalibrado">--</span></div>
           </div>
         </div>
-
         <div class="history-card">
           <h3 class="history-title">Historial de TDS</h3>
           <canvas id="chartTds"></canvas>
-
           <div class="history-config">
             <div class="history-config-title">Configuración de EC/TDS</div>
             <div class="history-config-item"><span>EC mínimo:</span> <span id="ecMin">--</span></div>
@@ -600,11 +564,9 @@
             <div class="history-config-item"><span>Estado de calibración:</span> <span id="ecCalibrado">--</span></div>
           </div>
         </div>
-
         <div class="history-card">
           <h3 class="history-title">Historial de Luz</h3>
           <canvas id="chartLuz"></canvas>
-
           <div class="history-config">
             <div class="history-config-title">Configuración general</div>
             <div class="history-config-item"><span>Litros de agua:</span> <span id="litrosAgua">--</span></div>
@@ -615,44 +577,38 @@
 
     <div class="section-card">
       <h2 class="section-title">Actuadores y Bombas</h2>
-
       <div class="actuator-grid">
-        <div class="actuator-card">
+        <div class="actuator-card" id="cardRecirculacion">
           <div id="iconRecirculacion" class="actuator-icon">⏻</div>
           <div class="actuator-title">Bomba Principal/Circulación</div>
           <div class="actuator-subtitle">Control de flujo principal del sistema</div>
           <div id="estadoRecirculacionCard" class="actuator-status">--</div>
         </div>
-
-        <div class="actuator-card">
+        <div class="actuator-card" id="cardAcido">
           <div id="iconAcido" class="actuator-icon">⏻</div>
           <div class="actuator-title">Bomba pH- (Ácido)</div>
           <div class="actuator-subtitle">Dosificación para reducir pH</div>
           <div id="estadoAcidoCard" class="actuator-status">--</div>
         </div>
-
-        <div class="actuator-card">
+        <div class="actuator-card" id="cardBase">
           <div id="iconBase" class="actuator-icon">⏻</div>
           <div class="actuator-title">Bomba pH+ (Base)</div>
           <div class="actuator-subtitle">Dosificación para aumentar pH</div>
           <div id="estadoBaseCard" class="actuator-status">--</div>
         </div>
-
-        <div class="actuator-card">
+        <div class="actuator-card" id="cardAgua">
           <div id="iconAgua" class="actuator-icon">⏻</div>
           <div class="actuator-title">Bomba de Agua</div>
           <div class="actuator-subtitle">Reposición y ajuste del nivel de agua</div>
           <div id="estadoAguaCard" class="actuator-status">--</div>
         </div>
-
-        <div class="actuator-card">
+        <div class="actuator-card" id="cardNutrienteA">
           <div id="iconNutrienteA" class="actuator-icon">⏻</div>
           <div class="actuator-title">Bomba Nutriente A</div>
           <div class="actuator-subtitle">Dosificación de nutriente A</div>
           <div id="estadoNutrienteACard" class="actuator-status">--</div>
         </div>
-
-        <div class="actuator-card">
+        <div class="actuator-card" id="cardNutrienteB">
           <div id="iconNutrienteB" class="actuator-icon">⏻</div>
           <div class="actuator-title">Bomba Nutriente B</div>
           <div class="actuator-subtitle">Dosificación de nutriente B</div>
@@ -671,13 +627,9 @@
     <div class="section-card">
       <h2 class="section-title">Alerta EC alto</h2>
       <div class="alert-box">
-        <p class="data-item"><span>Activa:</span> <span id="alertaActiva">--</span></p>
-        <p class="data-item"><span>Estado:</span> <span id="alertaEstado">--</span></p>
-        <p class="data-item"><span>PPM actual:</span> <span id="alertaPPM">--</span></p>
         <p class="data-item"><span>Etapa:</span> <span id="alertaEtapa">--</span></p>
         <p class="data-item"><span>Agua a retirar:</span> <span id="aguaRetirar">--</span></p>
         <p class="data-item"><span>Agua a reponer:</span> <span id="aguaReponer">--</span></p>
-        <p class="data-item"><span>Mensaje:</span> <span id="alertaMensaje">--</span></p>
       </div>
     </div>
 
@@ -691,12 +643,7 @@
     window.showData = function () {
       document.getElementById("hero").style.display = "none";
       document.getElementById("sensorData").style.display = "block";
-
-      setTimeout(() => {
-        chartPh.resize();
-        chartTds.resize();
-        chartLuz.resize();
-      }, 250);
+      setTimeout(() => { chartPh.resize(); chartTds.resize(); chartLuz.resize(); }, 250);
     };
 
     window.goBack = function () {
@@ -706,24 +653,56 @@
 
     const $ = (id) => document.getElementById(id);
 
-    function activo(v) {
-      return v === 1 || v === true || v === "1" || v === "true";
+    function activo(v) { return v === 1 || v === true || v === "1" || v === "true"; }
+    function textoSiNo(v) { return activo(v) ? "Sí" : "No"; }
+    function textoConectado(v) { return activo(v) ? "Conectado" : "Desconectado"; }
+    function textoCalibrado(v) { return activo(v) ? "Calibrado" : "Sin calibrar"; }
+    function valorSeguro(v, fallback = "--") { return v === undefined || v === null || v === "" ? fallback : v; }
+
+    // ===== BARRA PROGRESO pH =====
+    function actualizarBarraPH(phVal, phMinVal, phMaxVal) {
+      const min = 0, max = 14;
+      const rangoIzq = ((phMinVal - min) / (max - min)) * 100;
+      const rangAncho = ((phMaxVal - phMinVal) / (max - min)) * 100;
+      const pos = Math.max(0, Math.min(100, ((phVal - min) / (max - min)) * 100));
+      const enRango = phVal >= phMinVal && phVal <= phMaxVal;
+
+      $("phRango").style.left = rangoIzq + "%";
+      $("phRango").style.width = rangAncho + "%";
+      $("phIndicador").style.left = pos + "%";
+      $("phIndicador").className = "sensor-progress-indicator" + (enRango ? "" : " fuera");
     }
 
-    function textoSiNo(v) {
-      return activo(v) ? "Sí" : "No";
+    // ===== BARRA PROGRESO EC =====
+    function actualizarBarraEC(ecVal, ecMinVal, ecMaxVal) {
+      const min = 0, max = 1500;
+      const rangoIzq = ((ecMinVal - min) / (max - min)) * 100;
+      const rangAncho = ((ecMaxVal - ecMinVal) / (max - min)) * 100;
+      const pos = Math.max(0, Math.min(100, ((ecVal - min) / (max - min)) * 100));
+      const enRango = ecVal >= ecMinVal && ecVal <= ecMaxVal;
+
+      $("ecRango").style.left = rangoIzq + "%";
+      $("ecRango").style.width = rangAncho + "%";
+      $("ecIndicador").style.left = pos + "%";
+      $("ecIndicador").className = "sensor-progress-indicator" + (enRango ? "" : " fuera");
+      $("ecMinLabel").textContent = ecMinVal;
+      $("ecMaxLabel").textContent = ecMaxVal;
+      $("ecRangoTexto").textContent = ecMinVal + " - " + ecMaxVal + " ppm";
     }
 
-    function textoConectado(v) {
-      return activo(v) ? "Conectado" : "Desconectado";
-    }
+    // ===== BANNER ALERTA EC =====
+    function actualizarBannerAlerta(alertas) {
+      const banner = $("bannerAlertaEC");
+      const activa = activo(alertas.activa);
 
-    function textoCalibrado(v) {
-      return activo(v) ? "Calibrado" : "Sin calibrar";
-    }
-
-    function valorSeguro(v, fallback = "--") {
-      return v === undefined || v === null || v === "" ? fallback : v;
+      if (activa) {
+        $("bannerEtapa").textContent = valorSeguro(alertas.etapa);
+        $("bannerAguaRetirar").textContent = valorSeguro(alertas.agua_retirar_ml);
+        $("bannerAguaReponer").textContent = valorSeguro(alertas.agua_reponer_ml);
+        banner.classList.add("visible");
+      } else {
+        banner.classList.remove("visible");
+      }
     }
 
     function actualizarTarjetasSensores(estado, sensores) {
@@ -735,23 +714,14 @@
         ? (activo(estado.ph_calibrado) ? "PH4502C (Calibrado)" : "PH4502C (Sin calibrar)")
         : "PH4502C (Desconectado)";
 
-      $("ecSubtitle").textContent = ecConectado
-        ? "SEN0244 (Conectado)"
-        : "SEN0244 (Desconectado - Sin datos)";
+      $("ecSubtitle").textContent = ecConectado ? "SEN0244 (Conectado)" : "SEN0244 (Desconectado - Sin datos)";
 
-      let luzTexto = "LDR";
       const luzVal = Number(sensores.luz ?? 0);
-
-      if (!luzConectado) {
-        luzTexto = "LDR (Desconectado)";
-      } else if (luzVal <= 100) {
-        luzTexto = "LDR - Muy poca luz";
-      } else if (luzVal <= 500) {
-        luzTexto = "LDR - Poca luz";
-      } else {
-        luzTexto = "LDR - Buena luz";
-      }
-
+      let luzTexto = "LDR";
+      if (!luzConectado) luzTexto = "LDR (Desconectado)";
+      else if (luzVal <= 100) luzTexto = "LDR - Muy poca luz";
+      else if (luzVal <= 500) luzTexto = "LDR - Poca luz";
+      else luzTexto = "LDR - Buena luz";
       $("luzSubtitle").textContent = luzTexto;
 
       $("phBadge").textContent = phConectado ? "Activo" : "Alerta";
@@ -760,72 +730,40 @@
     }
 
     function actualizarTarjetasActuadores(estado) {
-      const recirculacionOn = activo(estado.bomba_recirculacion);
-      const acidoOn = activo(estado.bomba_acido);
-      const baseOn = activo(estado.bomba_base);
-      const aguaOn = activo(estado.bomba_agua);
-      const nutrienteAOn = activo(estado.bomba_nutrienteA);
-      const nutrienteBOn = activo(estado.bomba_nutrienteB);
+      const bombas = {
+        Recirculacion: activo(estado.bomba_recirculacion),
+        Acido: activo(estado.bomba_acido),
+        Base: activo(estado.bomba_base),
+        Agua: activo(estado.bomba_agua),
+        NutrienteA: activo(estado.bomba_nutrienteA),
+        NutrienteB: activo(estado.bomba_nutrienteB),
+      };
 
-      $("estadoRecirculacionCard").textContent = recirculacionOn ? "ON" : "OFF";
-      $("estadoAcidoCard").textContent = acidoOn ? "ON" : "OFF";
-      $("estadoBaseCard").textContent = baseOn ? "ON" : "OFF";
-      $("estadoAguaCard").textContent = aguaOn ? "ON" : "OFF";
-      $("estadoNutrienteACard").textContent = nutrienteAOn ? "ON" : "OFF";
-      $("estadoNutrienteBCard").textContent = nutrienteBOn ? "ON" : "OFF";
-
-      $("estadoRecirculacionCard").className = recirculacionOn ? "actuator-status on" : "actuator-status off";
-      $("estadoAcidoCard").className = acidoOn ? "actuator-status on" : "actuator-status off";
-      $("estadoBaseCard").className = baseOn ? "actuator-status on" : "actuator-status off";
-      $("estadoAguaCard").className = aguaOn ? "actuator-status on" : "actuator-status off";
-      $("estadoNutrienteACard").className = nutrienteAOn ? "actuator-status on" : "actuator-status off";
-      $("estadoNutrienteBCard").className = nutrienteBOn ? "actuator-status on" : "actuator-status off";
-
-      $("iconRecirculacion").className = recirculacionOn ? "actuator-icon on" : "actuator-icon";
-      $("iconAcido").className = acidoOn ? "actuator-icon on" : "actuator-icon";
-      $("iconBase").className = baseOn ? "actuator-icon on" : "actuator-icon";
-      $("iconAgua").className = aguaOn ? "actuator-icon on" : "actuator-icon";
-      $("iconNutrienteA").className = nutrienteAOn ? "actuator-icon on" : "actuator-icon";
-      $("iconNutrienteB").className = nutrienteBOn ? "actuator-icon on" : "actuator-icon";
+      for (const [nombre, on] of Object.entries(bombas)) {
+        $("estado" + nombre + "Card").textContent = on ? "ON" : "OFF";
+        $("estado" + nombre + "Card").className = on ? "actuator-status on" : "actuator-status off";
+        $("icon" + nombre).className = on ? "actuator-icon on" : "actuator-icon";
+        const card = $("card" + nombre);
+        if (card) card.className = on ? "actuator-card bomba-on" : "actuator-card";
+      }
     }
 
     function crearGrafico(idCanvas, label, colorLinea, beginAtZero = true) {
       const ctx = document.getElementById(idCanvas).getContext("2d");
-
       return new Chart(ctx, {
         type: "line",
         data: {
           labels: [],
           datasets: [{
-            label,
-            data: [],
-            borderColor: colorLinea,
-            backgroundColor: colorLinea,
-            borderWidth: 2,
-            tension: 0.3,
-            pointRadius: 3,
-            pointHoverRadius: 5,
-            fill: false
+            label, data: [],
+            borderColor: colorLinea, backgroundColor: colorLinea,
+            borderWidth: 2, tension: 0.3, pointRadius: 3, pointHoverRadius: 5, fill: false
           }]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          scales: {
-            x: {
-              grid: {
-                display: false
-              }
-            },
-            y: {
-              beginAtZero
-            }
-          }
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { grid: { display: false } }, y: { beginAtZero } }
         }
       });
     }
@@ -837,30 +775,23 @@
     function formatearLabelHistorial(item) {
       const fecha = item?.fecha || "";
       const hora = item?.hora || "";
-
       if (fecha && hora) return `${fecha} ${hora}`;
       if (hora) return hora;
       if (fecha) return fecha;
-
       if (item?.timestamp) {
         const d = new Date(Number(item.timestamp) * 1000);
         return d.toLocaleString("es-CO");
       }
-
       return "--";
     }
 
     function prepararSerieHistorica(obj) {
       if (!obj) return [];
-
       return Object.values(obj)
         .filter(item => item && item.valor !== undefined && item.valor !== null)
         .sort((a, b) => Number(a.timestamp || 0) - Number(b.timestamp || 0))
         .slice(-20)
-        .map(item => ({
-          label: formatearLabelHistorial(item),
-          valor: Number(item.valor || 0)
-        }));
+        .map(item => ({ label: formatearLabelHistorial(item), valor: Number(item.valor || 0) }));
     }
 
     function actualizarGraficoDesdeFirebase(chart, serie) {
@@ -885,6 +816,13 @@
       const cultivo = data.cultivo || {};
       const alertas = (data.alertas && data.alertas.ec_alto) ? data.alertas.ec_alto : {};
 
+      const phVal = Number(valorSeguro(sensores.ph, 0));
+      const ecVal = Number(valorSeguro(sensores.ec, 0));
+      const ecMinVal = Number(valorSeguro(config.ec_min, 400));
+      const ecMaxVal = Number(valorSeguro(config.ec_max, 900));
+      const phMinVal = Number(valorSeguro(config.ph_min, 5.5));
+      const phMaxVal = Number(valorSeguro(config.ph_max, 6.5));
+
       $("phValor").textContent = valorSeguro(sensores.ph);
       $("ecValor").textContent = valorSeguro(sensores.ec);
       $("luzValor").textContent = valorSeguro(sensores.luz);
@@ -908,48 +846,41 @@
 
       $("phSensorEstado").textContent = textoConectado(estado.sensor_ph_conectado);
       $("phSensorEstado").className = activo(estado.sensor_ph_conectado) ? "status-value green" : "status-value red";
-
       $("tdsSensorEstado").textContent = textoConectado(estado.sensor_ec_conectado);
       $("tdsSensorEstado").className = activo(estado.sensor_ec_conectado) ? "status-value green" : "status-value red";
-
       $("luzSensorEstado").textContent = textoConectado(estado.sensor_luz_conectado);
       $("luzSensorEstado").className = activo(estado.sensor_luz_conectado) ? "status-value green" : "status-value red";
 
       actualizarTarjetasSensores(estado, sensores);
       actualizarTarjetasActuadores(estado);
 
-      $("alertaActiva").textContent = textoSiNo(alertas.activa);
-      $("alertaEstado").textContent = valorSeguro(alertas.estado);
-      $("alertaPPM").textContent = valorSeguro(alertas.ppm_actual);
+      // Barras de progreso
+      actualizarBarraPH(phVal, phMinVal, phMaxVal);
+      actualizarBarraEC(ecVal, ecMinVal, ecMaxVal);
+
+      // Alerta EC
       $("alertaEtapa").textContent = valorSeguro(alertas.etapa);
       $("aguaRetirar").textContent = valorSeguro(alertas.agua_retirar_ml);
       $("aguaReponer").textContent = valorSeguro(alertas.agua_reponer_ml);
-      $("alertaMensaje").textContent = valorSeguro(alertas.mensaje);
+      actualizarBannerAlerta(alertas);
 
       const ultima = valorSeguro(estado.ultima_actualizacion, "");
-      if (ultima) {
-        $("ultimaActualizacion").textContent = ultima;
-      } else {
-        $("ultimaActualizacion").textContent = new Date().toLocaleString("es-CO");
-      }
+      $("ultimaActualizacion").textContent = ultima || new Date().toLocaleString("es-CO");
     });
 
     const historicoPhRef = ref(db, "cultivo_vertical/historico_series/ph");
     onValue(historicoPhRef, (snapshot) => {
-      const serie = prepararSerieHistorica(snapshot.val());
-      actualizarGraficoDesdeFirebase(chartPh, serie);
+      actualizarGraficoDesdeFirebase(chartPh, prepararSerieHistorica(snapshot.val()));
     });
 
     const historicoEcRef = ref(db, "cultivo_vertical/historico_series/ec");
     onValue(historicoEcRef, (snapshot) => {
-      const serie = prepararSerieHistorica(snapshot.val());
-      actualizarGraficoDesdeFirebase(chartTds, serie);
+      actualizarGraficoDesdeFirebase(chartTds, prepararSerieHistorica(snapshot.val()));
     });
 
     const historicoLuzRef = ref(db, "cultivo_vertical/historico_series/luz");
     onValue(historicoLuzRef, (snapshot) => {
-      const serie = prepararSerieHistorica(snapshot.val());
-      actualizarGraficoDesdeFirebase(chartLuz, serie);
+      actualizarGraficoDesdeFirebase(chartLuz, prepararSerieHistorica(snapshot.val()));
     });
   </script>
 </body>
