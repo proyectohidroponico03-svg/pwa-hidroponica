@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Monitoreo Hidropónico</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     * { box-sizing: border-box; }
 
@@ -14,6 +15,7 @@
       margin: 0;
       padding: 0;
       color: #1f1f1f;
+      transition: background 0.25s ease, color 0.25s ease;
     }
 
     #bannerAlertaEC {
@@ -60,11 +62,33 @@
       font-weight: 700;
     }
 
+    .theme-toggle {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 10001;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-size: 0.95em;
+      font-weight: 700;
+      cursor: pointer;
+      background: #1f1f1f;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      transition: all 0.25s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-1px);
+    }
+
     .hero {
       background-color: #4caf50;
       color: white;
       padding: 50px;
       text-align: center;
+      transition: background 0.25s ease;
     }
 
     h1 { font-size: 2.5em; margin-bottom: 0.5em; }
@@ -80,6 +104,7 @@
       cursor: pointer;
       border-radius: 10px;
       text-align: center;
+      transition: background 0.25s ease;
     }
 
     .btn:hover, .access-btn:hover { background-color: #45a049; }
@@ -92,6 +117,7 @@
       padding: 22px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.06);
       margin-bottom: 20px;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
     .section-title { font-size: 1.8em; margin-bottom: 12px; color: #33a047; }
@@ -104,6 +130,7 @@
       padding: 20px 22px 14px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.06);
       margin-bottom: 20px;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
     .status-title { font-size: 1.35em; font-weight: 700; margin-bottom: 18px; color: #1f1f1f; }
@@ -121,6 +148,7 @@
       padding: 12px 10px;
       border-radius: 12px;
       background: #f8fbf8;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
     }
 
     .status-icon { font-size: 18px; line-height: 1; margin-top: 2px; }
@@ -138,6 +166,7 @@
       padding: 20px 22px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.06);
       margin-bottom: 20px;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
     .cultivo-grid {
@@ -155,6 +184,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
     }
 
     .cultivo-icon {
@@ -164,6 +194,7 @@
       color: #2eaf4a;
       display: flex; align-items: center; justify-content: center;
       font-size: 20px; font-weight: bold; flex-shrink: 0;
+      transition: background 0.25s ease, color 0.25s ease;
     }
 
     .cultivo-text { display: flex; flex-direction: column; gap: 3px; }
@@ -184,6 +215,7 @@
       padding: 18px 16px;
       text-align: center;
       box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
     .sensor-card-top {
@@ -221,6 +253,7 @@
       height: 10px;
       position: relative;
       overflow: visible;
+      transition: background 0.25s ease;
     }
 
     .sensor-progress-rango {
@@ -261,6 +294,7 @@
       border-radius: 16px;
       padding: 16px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
     .history-title { margin: 0 0 12px 0; font-size: 1.05em; color: #333; font-weight: 700; }
@@ -270,6 +304,7 @@
       margin-top: 14px; padding: 12px 14px;
       background: #f8fbf8; border: 1px solid #e7eee7;
       border-radius: 12px; text-align: left;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
     }
 
     .history-config-title { font-size: 0.95em; font-weight: 700; color: #33a047; margin-bottom: 8px; }
@@ -290,7 +325,7 @@
       padding: 20px 16px;
       text-align: center;
       box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease, background 0.25s ease, color 0.25s ease;
     }
 
     .actuator-card.bomba-on {
@@ -331,10 +366,92 @@
       padding: 15px;
       border-radius: 12px;
       margin-top: 15px;
+      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
     }
 
     .data-item { margin: 6px 0; font-size: 1.15em; }
     .data-item span { font-weight: bold; }
+
+    /* MODO OSCURO */
+    body.dark-mode {
+      background: #111827;
+      color: #e5e7eb;
+    }
+
+    body.dark-mode .hero {
+      background: linear-gradient(135deg, #14532d, #166534);
+    }
+
+    body.dark-mode .section-card,
+    body.dark-mode .status-panel,
+    body.dark-mode .cultivo-panel,
+    body.dark-mode .history-card,
+    body.dark-mode .sensor-card,
+    body.dark-mode .actuator-card,
+    body.dark-mode .status-card,
+    body.dark-mode .history-config,
+    body.dark-mode .cultivo-card,
+    body.dark-mode .alert-box {
+      background: #1f2937;
+      color: #e5e7eb;
+      border-color: #374151;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.22);
+    }
+
+    body.dark-mode .section-title,
+    body.dark-mode .history-config-title {
+      color: #4ade80;
+    }
+
+    body.dark-mode .status-title,
+    body.dark-mode .history-title,
+    body.dark-mode .actuator-title,
+    body.dark-mode .cultivo-value,
+    body.dark-mode .sensor-main-value,
+    body.dark-mode .history-config-item,
+    body.dark-mode .data-item {
+      color: #e5e7eb;
+    }
+
+    body.dark-mode .status-label,
+    body.dark-mode .cultivo-label,
+    body.dark-mode .sensor-card-subtitle,
+    body.dark-mode .actuator-subtitle,
+    body.dark-mode .sensor-range,
+    body.dark-mode .status-time,
+    body.dark-mode .sensor-progress-labels,
+    body.dark-mode .sensor-unit {
+      color: #9ca3af;
+    }
+
+    body.dark-mode .sensor-progress-bar-bg {
+      background: #374151;
+    }
+
+    body.dark-mode .actuator-icon {
+      background: #374151;
+      color: #d1d5db;
+    }
+
+    body.dark-mode .actuator-card.bomba-on {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25), 0 4px 16px rgba(34, 197, 94, 0.12);
+    }
+
+    body.dark-mode .btn,
+    body.dark-mode .access-btn {
+      background-color: #16a34a;
+    }
+
+    body.dark-mode .btn:hover,
+    body.dark-mode .access-btn:hover {
+      background-color: #15803d;
+    }
+
+    body.dark-mode .theme-toggle {
+      background: #f3f4f6;
+      color: #111827;
+    }
 
     @media (max-width: 1024px) {
       .cultivo-grid, .actuator-grid, .history-grid { grid-template-columns: 1fr; }
@@ -349,6 +466,13 @@
       .access-btn { width: 100%; max-width: 260px; }
       #bannerAlertaEC.visible { flex-direction: column; gap: 8px; }
       .banner-datos { gap: 8px; }
+
+      .theme-toggle {
+        right: 12px;
+        bottom: 12px;
+        padding: 10px 14px;
+        font-size: 0.88em;
+      }
     }
   </style>
 </head>
@@ -364,6 +488,8 @@
       <div class="banner-dato">Agua a reponer: <span id="bannerAguaReponer">--</span> ml</div>
     </div>
   </div>
+
+  <button id="themeToggle" class="theme-toggle" onclick="alternarTema()">🌙 Modo oscuro</button>
 
   <div class="hero" id="hero">
     <h1>Sistema Hidropónico</h1>
@@ -701,8 +827,36 @@
       const ctx = document.getElementById(idCanvas).getContext("2d");
       return new Chart(ctx, {
         type: "line",
-        data: { labels: [], datasets: [{ label, data: [], borderColor: colorLinea, backgroundColor: colorLinea, borderWidth: 2, tension: 0.3, pointRadius: 3, pointHoverRadius: 5, fill: false }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero } } }
+        data: {
+          labels: [],
+          datasets: [{
+            label,
+            data: [],
+            borderColor: colorLinea,
+            backgroundColor: colorLinea,
+            borderWidth: 2,
+            tension: 0.3,
+            pointRadius: 3,
+            pointHoverRadius: 5,
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: {}
+            },
+            y: {
+              beginAtZero,
+              grid: {},
+              ticks: {}
+            }
+          }
+        }
       });
     }
 
@@ -710,13 +864,52 @@
     const chartTds = crearGrafico("chartTds", "TDS", "#4285f4", true);
     const chartLuz = crearGrafico("chartLuz", "Luz", "#fbbc04", true);
 
+    function actualizarTemaGraficas(esOscuro) {
+      const colorTexto = esOscuro ? "#e5e7eb" : "#4b5563";
+      const colorGrid = esOscuro ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.08)";
+
+      [chartPh, chartTds, chartLuz].forEach(chart => {
+        if (!chart) return;
+
+        chart.options.scales.x.ticks.color = colorTexto;
+        chart.options.scales.y.ticks.color = colorTexto;
+        chart.options.scales.x.grid.color = colorGrid;
+        chart.options.scales.y.grid.color = colorGrid;
+
+        chart.update();
+      });
+    }
+
+    function aplicarTema(esOscuro) {
+      document.body.classList.toggle("dark-mode", esOscuro);
+
+      const boton = $("themeToggle");
+      if (boton) {
+        boton.textContent = esOscuro ? "☀️ Modo claro" : "🌙 Modo oscuro";
+      }
+
+      try {
+        localStorage.setItem("tema_hidroponico", esOscuro ? "dark" : "light");
+      } catch (e) {}
+
+      actualizarTemaGraficas(esOscuro);
+    }
+
+    window.alternarTema = function () {
+      const oscuro = !document.body.classList.contains("dark-mode");
+      aplicarTema(oscuro);
+    };
+
     function formatearLabelHistorial(item) {
       const fecha = item?.fecha || "";
       const hora = item?.hora || "";
       if (fecha && hora) return `${fecha} ${hora}`;
       if (hora) return hora;
       if (fecha) return fecha;
-      if (item?.timestamp) { const d = new Date(Number(item.timestamp) * 1000); return d.toLocaleString("es-CO"); }
+      if (item?.timestamp) {
+        const d = new Date(Number(item.timestamp) * 1000);
+        return d.toLocaleString("es-CO");
+      }
       return "--";
     }
 
@@ -733,6 +926,13 @@
       chart.data.labels = serie.map(p => p.label);
       chart.data.datasets[0].data = serie.map(p => p.valor);
       chart.update();
+    }
+
+    try {
+      const temaGuardado = localStorage.getItem("tema_hidroponico");
+      aplicarTema(temaGuardado === "dark");
+    } catch (e) {
+      aplicarTema(false);
     }
 
     const connectedRef = ref(db, ".info/connected");
@@ -792,13 +992,19 @@
     });
 
     const historicoPhRef = ref(db, "cultivo_vertical/historico_series/ph");
-    onValue(historicoPhRef, (snapshot) => { actualizarGraficoDesdeFirebase(chartPh, prepararSerieHistorica(snapshot.val())); });
+    onValue(historicoPhRef, (snapshot) => {
+      actualizarGraficoDesdeFirebase(chartPh, prepararSerieHistorica(snapshot.val()));
+    });
 
     const historicoEcRef = ref(db, "cultivo_vertical/historico_series/ec");
-    onValue(historicoEcRef, (snapshot) => { actualizarGraficoDesdeFirebase(chartTds, prepararSerieHistorica(snapshot.val())); });
+    onValue(historicoEcRef, (snapshot) => {
+      actualizarGraficoDesdeFirebase(chartTds, prepararSerieHistorica(snapshot.val()));
+    });
 
     const historicoLuzRef = ref(db, "cultivo_vertical/historico_series/luz");
-    onValue(historicoLuzRef, (snapshot) => { actualizarGraficoDesdeFirebase(chartLuz, prepararSerieHistorica(snapshot.val())); });
+    onValue(historicoLuzRef, (snapshot) => {
+      actualizarGraficoDesdeFirebase(chartLuz, prepararSerieHistorica(snapshot.val()));
+    });
   </script>
 </body>
 </html>
