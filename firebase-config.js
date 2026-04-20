@@ -1,10 +1,6 @@
-// firebase-config.js
-
-// Importa las funciones necesarias de Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-// Tu configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyA8ehAHx15-Oo_FBEt_J_NMG5rDvYicAY8",
   authDomain: "proyecto-hidroponico-9ea9d.firebaseapp.com",
@@ -15,10 +11,7 @@ const firebaseConfig = {
   appId: "1:1080749567541:web:e953df10935ccc67914b7c"
 };
 
-// Inicializar Firebase
 const app = initializeApp(firebaseConfig);
-
-// Obtener la referencia a la base de datos
 const db = getDatabase(app);
 
 export { db };
