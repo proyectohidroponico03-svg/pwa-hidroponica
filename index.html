@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,7 +29,7 @@
       margin-top: 0.5em;
     }
 
-    .btn {
+    .btn, .access-btn {
       padding: 15px 30px;
       margin-top: 30px;
       font-size: 1.2em;
@@ -42,12 +41,12 @@
       text-align: center;
     }
 
-    .btn:hover {
+    .btn:hover, .access-btn:hover {
       background-color: #45a049;
     }
 
     .content {
-      margin: 50px;
+      margin: 30px;
       background: white;
       padding: 20px;
       border-radius: 8px;
@@ -55,13 +54,13 @@
     }
 
     .section-title {
-      font-size: 1.5em;
+      font-size: 1.8em;
       margin-bottom: 10px;
       color: #4caf50;
     }
 
     .data-item {
-      margin: 5px 0;
+      margin: 6px 0;
       font-size: 1.2em;
     }
 
@@ -71,22 +70,10 @@
 
     .access-btn {
       display: block;
-      width: 200px;
-      margin: 30px auto;
-      padding: 15px;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      font-size: 1.2em;
-      text-align: center;
-      border-radius: 8px;
+      width: 220px;
+      margin: 30px auto 0;
     }
 
-    .access-btn:hover {
-      background-color: #45a049;
-    }
-
-    /* Estado de los sensores */
     .status {
       background-color: #f1f8e9;
       border: 1px solid #4caf50;
@@ -95,103 +82,211 @@
       margin-bottom: 20px;
     }
 
-    .status .status-item {
-      display: inline-block;
-      margin-right: 20px;
-      font-size: 1.2em;
+    .status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-bottom: 10px;
     }
 
-    .status .status-item span {
+    .status-item {
+      font-size: 1.15em;
+    }
+
+    .status-item span {
       font-weight: bold;
     }
 
-    .status .status-item.green {
-      color: green;
+    .green { color: green; }
+    .red { color: red; }
+    .blue { color: #2196F3; }
+    .orange { color: #ff9800; }
+
+    .alert-box {
+      background: #fff8e1;
+      border: 1px solid #ffb300;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
     }
 
-    .status .status-item.red {
-      color: red;
-    }
-
-    .status .status-item.blue {
-      color: #2196F3;
-    }
-
-    .status p {
-      margin-top: 10px;
-      font-size: 0.9em;
-    }
-
-    .status small {
-      font-size: 0.8em;
+    .muted {
+      color: #666;
+      font-size: 0.95em;
     }
   </style>
 </head>
-
 <body>
 
-  <!-- Hero Section -->
-  <div class="hero">
+  <div class="hero" id="hero">
     <h1>Sistema Hidropónico</h1>
     <p>Monitoreo inteligente para tu cultivo de lechuga</p>
     <button class="btn" onclick="showData()">Acceder</button>
   </div>
 
-  <!-- Content Section (hidden by default) -->
   <div class="content" id="sensorData" style="display:none;">
-    <!-- Estado del sistema -->
     <div class="status">
-      <div class="status-item">
-        <span>Conexión:</span> <span class="green">En línea</span>
+      <div class="status-row">
+        <div class="status-item"><span>Conexión:</span> <span id="conexionEstado" class="green">Cargando...</span></div>
+        <div class="status-item"><span>Modo:</span> <span class="blue">Sensores reales</span></div>
+        <div class="status-item"><span>pH Sensor:</span> <span id="phSensorEstado" class="green">Cargando...</span></div>
+        <div class="status-item"><span>TDS Sensor:</span> <span id="tdsSensorEstado" class="green">Cargando...</span></div>
+        <div class="status-item"><span>Luz Sensor:</span> <span id="luzSensorEstado" class="green">Cargando...</span></div>
       </div>
-      <div class="status-item">
-        <span>Modo:</span> <span class="green">Sensores reales</span>
-      </div>
-      <div class="status-item">
-        <span>pH Sensor:</span> <span class="green">Calibrado</span>
-      </div>
-      <div class="status-item">
-        <span>TDS Sensor:</span> <span class="green">Conectado</span>
-      </div>
-      <p><small>Última actualización: 31/12/1989, 19:29:28</small></p>
+      <p class="muted">Última actualización web: <span id="ultimaActualizacion">--</span></p>
     </div>
 
-    <!-- Sensores -->
     <h2 class="section-title">Sensores</h2>
-    <p class="data-item"><span>pH:</span> 6.1</p>
-    <p class="data-item"><span>EC:</span> 674</p>
-    <p class="data-item"><span>Luz:</span> 335</p>
+    <p class="data-item"><span>pH:</span> <span id="phValor">--</span></p>
+    <p class="data-item"><span>EC:</span> <span id="ecValor">--</span></p>
+    <p class="data-item"><span>Luz:</span> <span id="luzValor">--</span></p>
 
-    <!-- Configuración -->
     <h2 class="section-title">Configuración</h2>
-    <p class="data-item"><span>pH mínimo:</span> 5.5</p>
-    <p class="data-item"><span>pH máximo:</span> 6.5</p>
-    <p class="data-item"><span>EC mínimo:</span> 600</p>
-    <p class="data-item"><span>EC máximo:</span> 900</p>
+    <p class="data-item"><span>pH mínimo:</span> <span id="phMin">--</span></p>
+    <p class="data-item"><span>pH máximo:</span> <span id="phMax">--</span></p>
+    <p class="data-item"><span>EC mínimo:</span> <span id="ecMin">--</span></p>
+    <p class="data-item"><span>EC máximo:</span> <span id="ecMax">--</span></p>
+    <p class="data-item"><span>Litros de agua:</span> <span id="litrosAgua">--</span></p>
 
-    <!-- Estado del Sistema -->
+    <h2 class="section-title">Cultivo</h2>
+    <p class="data-item"><span>Días de cultivo:</span> <span id="diasCultivo">--</span></p>
+    <p class="data-item"><span>Etapa:</span> <span id="etapaCultivo">--</span></p>
+    <p class="data-item"><span>Fecha inicio:</span> <span id="fechaInicioCultivo">--</span></p>
+
     <h2 class="section-title">Estado del Sistema</h2>
-    <p class="data-item"><span>Bomba ácido:</span> Off</p>
-    <p class="data-item"><span>Bomba agua:</span> Off</p>
-    <p class="data-item"><span>Bomba base:</span> Off</p>
-    <p class="data-item"><span>Bomba nutriente A:</span> Off</p>
-    <p class="data-item"><span>Bomba nutriente B:</span> Off</p>
-    <p class="data-item"><span>Bomba recirculación:</span> Off</p>
+    <p class="data-item"><span>Bomba ácido:</span> <span id="bombaAcido">--</span></p>
+    <p class="data-item"><span>Bomba agua:</span> <span id="bombaAgua">--</span></p>
+    <p class="data-item"><span>Bomba base:</span> <span id="bombaBase">--</span></p>
+    <p class="data-item"><span>Bomba nutriente A:</span> <span id="bombaNutrienteA">--</span></p>
+    <p class="data-item"><span>Bomba nutriente B:</span> <span id="bombaNutrienteB">--</span></p>
+    <p class="data-item"><span>Bomba recirculación:</span> <span id="bombaRecirculacion">--</span></p>
+    <p class="data-item"><span>Sistema activo:</span> <span id="sistemaActivo">--</span></p>
+    <p class="data-item"><span>Sistema listo:</span> <span id="sistemaListo">--</span></p>
+    <p class="data-item"><span>Dosis inicial hecha:</span> <span id="dosisInicialHecha">--</span></p>
+    <p class="data-item"><span>pH calibrado:</span> <span id="phCalibrado">--</span></p>
+    <p class="data-item"><span>EC calibrado:</span> <span id="ecCalibrado">--</span></p>
+
+    <h2 class="section-title">Alerta EC alto</h2>
+    <div class="alert-box">
+      <p class="data-item"><span>Activa:</span> <span id="alertaActiva">--</span></p>
+      <p class="data-item"><span>Estado:</span> <span id="alertaEstado">--</span></p>
+      <p class="data-item"><span>PPM actual:</span> <span id="alertaPPM">--</span></p>
+      <p class="data-item"><span>Etapa:</span> <span id="alertaEtapa">--</span></p>
+      <p class="data-item"><span>Agua a retirar:</span> <span id="aguaRetirar">--</span></p>
+      <p class="data-item"><span>Agua a reponer:</span> <span id="aguaReponer">--</span></p>
+      <p class="data-item"><span>Mensaje:</span> <span id="alertaMensaje">--</span></p>
+    </div>
 
     <button class="access-btn" onclick="goBack()">Volver</button>
   </div>
 
-  <script>
-    function showData() {
-      document.querySelector('.hero').style.display = 'none';
-      document.getElementById('sensorData').style.display = 'block';
+  <script type="module">
+    import { db } from "./firebase-config.js";
+    import {
+      ref,
+      onValue
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    window.showData = function () {
+      document.getElementById("hero").style.display = "none";
+      document.getElementById("sensorData").style.display = "block";
+    };
+
+    window.goBack = function () {
+      document.getElementById("hero").style.display = "block";
+      document.getElementById("sensorData").style.display = "none";
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function activo(v) {
+      return v === 1 || v === true || v === "1" || v === "true";
     }
 
-    function goBack() {
-      document.querySelector('.hero').style.display = 'block';
-      document.getElementById('sensorData').style.display = 'none';
+    function textoOnOff(v) {
+      return activo(v) ? "On" : "Off";
     }
+
+    function textoSiNo(v) {
+      return activo(v) ? "Sí" : "No";
+    }
+
+    function textoConectado(v) {
+      return activo(v) ? "Conectado" : "Desconectado";
+    }
+
+    function textoCalibrado(v) {
+      return activo(v) ? "Calibrado" : "Sin calibrar";
+    }
+
+    function valorSeguro(v, fallback = "--") {
+      return v === undefined || v === null || v === "" ? fallback : v;
+    }
+
+    function actualizarHoraWeb() {
+      const ahora = new Date();
+      $("ultimaActualizacion").textContent = ahora.toLocaleString("es-CO");
+    }
+
+    const connectedRef = ref(db, ".info/connected");
+    onValue(connectedRef, (snapshot) => {
+      const conectado = snapshot.val();
+      $("conexionEstado").textContent = conectado ? "En línea" : "Fuera de línea";
+      $("conexionEstado").className = conectado ? "green" : "red";
+    });
+
+    const cultivoRef = ref(db, "cultivo_vertical");
+    onValue(cultivoRef, (snapshot) => {
+      const data = snapshot.val() || {};
+
+      const sensores = data.sensores || {};
+      const config = data.configuracion || {};
+      const estado = data.estado_sistema || {};
+      const cultivo = data.cultivo || {};
+      const alertas = (data.alertas && data.alertas.ec_alto) ? data.alertas.ec_alto : {};
+
+      $("phValor").textContent = valorSeguro(sensores.ph);
+      $("ecValor").textContent = valorSeguro(sensores.ec);
+      $("luzValor").textContent = valorSeguro(sensores.luz);
+
+      $("phMin").textContent = valorSeguro(config.ph_min);
+      $("phMax").textContent = valorSeguro(config.ph_max);
+      $("ecMin").textContent = valorSeguro(config.ec_min);
+      $("ecMax").textContent = valorSeguro(config.ec_max);
+      $("litrosAgua").textContent = valorSeguro(config.litros_agua);
+
+      $("diasCultivo").textContent = valorSeguro(cultivo.dias_cultivo);
+      $("etapaCultivo").textContent = valorSeguro(cultivo.etapa);
+      $("fechaInicioCultivo").textContent = valorSeguro(cultivo.fecha_inicio_cultivo);
+
+      $("bombaAcido").textContent = textoOnOff(estado.bomba_acido);
+      $("bombaAgua").textContent = textoOnOff(estado.bomba_agua);
+      $("bombaBase").textContent = textoOnOff(estado.bomba_base);
+      $("bombaNutrienteA").textContent = textoOnOff(estado.bomba_nutrienteA);
+      $("bombaNutrienteB").textContent = textoOnOff(estado.bomba_nutrienteB);
+      $("bombaRecirculacion").textContent = textoOnOff(estado.bomba_recirculacion);
+
+      $("sistemaActivo").textContent = textoSiNo(estado.sistema_activo);
+      $("sistemaListo").textContent = textoSiNo(estado.sistema_listo);
+      $("dosisInicialHecha").textContent = textoSiNo(estado.dosis_inicial_hecha);
+
+      $("phCalibrado").textContent = textoCalibrado(estado.ph_calibrado);
+      $("ecCalibrado").textContent = textoCalibrado(estado.ec_calibrado);
+
+      $("phSensorEstado").textContent = textoCalibrado(estado.ph_calibrado);
+      $("tdsSensorEstado").textContent = textoConectado(estado.sensor_ec_conectado);
+      $("luzSensorEstado").textContent = textoConectado(estado.sensor_luz_conectado);
+
+      $("alertaActiva").textContent = textoSiNo(alertas.activa);
+      $("alertaEstado").textContent = valorSeguro(alertas.estado);
+      $("alertaPPM").textContent = valorSeguro(alertas.ppm_actual);
+      $("alertaEtapa").textContent = valorSeguro(alertas.etapa);
+      $("aguaRetirar").textContent = valorSeguro(alertas.agua_retirar_ml);
+      $("aguaReponer").textContent = valorSeguro(alertas.agua_reponer_ml);
+      $("alertaMensaje").textContent = valorSeguro(alertas.mensaje);
+
+      actualizarHoraWeb();
+    });
   </script>
 </body>
-
 </html>
