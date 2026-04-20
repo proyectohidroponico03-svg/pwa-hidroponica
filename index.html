@@ -661,12 +661,6 @@
 
     <div class="section-card">
       <h2 class="section-title">Estado del Sistema</h2>
-      <p class="data-item"><span>Bomba ácido:</span> <span id="bombaAcido">--</span></p>
-      <p class="data-item"><span>Bomba agua:</span> <span id="bombaAgua">--</span></p>
-      <p class="data-item"><span>Bomba base:</span> <span id="bombaBase">--</span></p>
-      <p class="data-item"><span>Bomba nutriente A:</span> <span id="bombaNutrienteA">--</span></p>
-      <p class="data-item"><span>Bomba nutriente B:</span> <span id="bombaNutrienteB">--</span></p>
-      <p class="data-item"><span>Bomba recirculación:</span> <span id="bombaRecirculacion">--</span></p>
       <p class="data-item"><span>Sistema activo:</span> <span id="sistemaActivo">--</span></p>
       <p class="data-item"><span>Sistema listo:</span> <span id="sistemaListo">--</span></p>
       <p class="data-item"><span>Dosis inicial hecha:</span> <span id="dosisInicialHecha">--</span></p>
@@ -714,10 +708,6 @@
 
     function activo(v) {
       return v === 1 || v === true || v === "1" || v === "true";
-    }
-
-    function textoOnOff(v) {
-      return activo(v) ? "On" : "Off";
     }
 
     function textoSiNo(v) {
@@ -909,13 +899,6 @@
       $("etapaCultivo").textContent = valorSeguro(cultivo.etapa);
       $("fechaInicioCultivo").textContent = valorSeguro(cultivo.fecha_inicio_cultivo);
 
-      $("bombaAcido").textContent = textoOnOff(estado.bomba_acido);
-      $("bombaAgua").textContent = textoOnOff(estado.bomba_agua);
-      $("bombaBase").textContent = textoOnOff(estado.bomba_base);
-      $("bombaNutrienteA").textContent = textoOnOff(estado.bomba_nutrienteA);
-      $("bombaNutrienteB").textContent = textoOnOff(estado.bomba_nutrienteB);
-      $("bombaRecirculacion").textContent = textoOnOff(estado.bomba_recirculacion);
-
       $("sistemaActivo").textContent = textoSiNo(estado.sistema_activo);
       $("sistemaListo").textContent = textoSiNo(estado.sistema_listo);
       $("dosisInicialHecha").textContent = textoSiNo(estado.dosis_inicial_hecha);
@@ -968,7 +951,5 @@
       actualizarGraficoDesdeFirebase(chartLuz, serie);
     });
   </script>
-</body>
-</html>
 </body>
 </html>
