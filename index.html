@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Monitoreo Hidropónico</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -152,7 +153,6 @@
       margin-top: 15px;
     }
 
-    /* Tarjetas de sensores */
     .sensor-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -217,6 +217,33 @@
       color: #7c7c7c;
     }
 
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .history-card {
+      background: #fbfbf7;
+      border: 1px solid #ece9df;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    .history-title {
+      margin: 0 0 12px 0;
+      font-size: 1.05em;
+      color: #333;
+      font-weight: 700;
+    }
+
+    .history-card canvas {
+      width: 100% !important;
+      height: 220px !important;
+    }
+
     @media (max-width: 768px) {
       .hero {
         padding: 35px 20px;
@@ -235,11 +262,9 @@
         padding: 16px;
       }
 
-      .status-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .sensor-cards {
+      .status-grid,
+      .sensor-cards,
+      .history-grid {
         grid-template-columns: 1fr;
       }
 
@@ -347,6 +372,27 @@
     </div>
 
     <div class="section-card">
+      <h2 class="section-title">Historial</h2>
+
+      <div class="history-grid">
+        <div class="history-card">
+          <h3 class="history-title">Historial de pH</h3>
+          <canvas id="chartPh"></canvas>
+        </div>
+
+        <div class="history-card">
+          <h3 class="history-title">Historial de TDS</h3>
+          <canvas id="chartTds"></canvas>
+        </div>
+
+        <div class="history-card">
+          <h3 class="history-title">Historial de Luz</h3>
+          <canvas id="chartLuz"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
       <h2 class="section-title">Configuración</h2>
       <p class="data-item"><span>pH mínimo:</span> <span id="phMin">--</span></p>
       <p class="data-item"><span>pH máximo:</span> <span id="phMax">--</span></p>
@@ -400,6 +446,11 @@
     window.showData = function () {
       document.getElementById("hero").style.display = "none";
       document.getElementById("sensorData").style.display = "block";
+      setTimeout(() => {
+        if (chartPh) chartPh.resize();
+        if (chartTds) chartTds.resize();
+        if (chartLuz) chartLuz.resize();
+      }, 200);
     };
 
     window.goBack = function () {
@@ -471,6 +522,99 @@
       $("luzBadge").textContent = luzConectado ? "Activo" : "Alerta";
     }
 
+    const maxPuntosHistorial = 10;
+    let ultimoRegistroHistorial = 0;
+    const intervaloHistorialMs = 10000;
+
+    const labelsHistorial = [];
+    const datosPH = [];
+    const datosTDS = [];
+    const datosLuz = [];
+
+    function agregarDatoSerie(serie, valor) {
+      serie.push(valor);
+      if (serie.length > maxPuntosHistorial) serie.shift();
+    }
+
+    function agregarLabelHistorial(label) {
+      labelsHistorial.push(label);
+      if (labelsHistorial.length > maxPuntosHistorial) labelsHistorial.shift();
+    }
+
+    function crearGrafico(idCanvas, label, colorLinea) {
+      const ctx = document.getElementById(idCanvas).getContext("2d");
+
+      return new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: [],
+          datasets: [{
+            label,
+            data: [],
+            borderColor: colorLinea,
+            backgroundColor: colorLinea,
+            borderWidth: 2,
+            tension: 0.3,
+            pointRadius: 3,
+            pointHoverRadius: 5,
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              grid: { display: false }
+            },
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    const chartPh = crearGrafico("chartPh", "pH", "#4caf50");
+    const chartTds = crearGrafico("chartTds", "TDS", "#4285f4");
+    const chartLuz = crearGrafico("chartLuz", "Luz", "#fbbc04");
+
+    function actualizarGraficos() {
+      chartPh.data.labels = [...labelsHistorial];
+      chartTds.data.labels = [...labelsHistorial];
+      chartLuz.data.labels = [...labelsHistorial];
+
+      chartPh.data.datasets[0].data = [...datosPH];
+      chartTds.data.datasets[0].data = [...datosTDS];
+      chartLuz.data.datasets[0].data = [...datosLuz];
+
+      chartPh.update();
+      chartTds.update();
+      chartLuz.update();
+    }
+
+    function registrarHistorial(ph, ec, luz) {
+      const ahora = Date.now();
+
+      if (ahora - ultimoRegistroHistorial < intervaloHistorialMs) return;
+      ultimoRegistroHistorial = ahora;
+
+      const hora = new Date().toLocaleTimeString("es-CO", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+      agregarLabelHistorial(hora);
+      agregarDatoSerie(datosPH, Number(ph ?? 0));
+      agregarDatoSerie(datosTDS, Number(ec ?? 0));
+      agregarDatoSerie(datosLuz, Number(luz ?? 0));
+
+      actualizarGraficos();
+    }
+
     const connectedRef = ref(db, ".info/connected");
     onValue(connectedRef, (snapshot) => {
       const conectado = snapshot.val();
@@ -535,6 +679,7 @@
       $("aguaReponer").textContent = valorSeguro(alertas.agua_reponer_ml);
       $("alertaMensaje").textContent = valorSeguro(alertas.mensaje);
 
+      registrarHistorial(sensores.ph, sensores.ec, sensores.luz);
       actualizarHoraWeb();
     });
   </script>
