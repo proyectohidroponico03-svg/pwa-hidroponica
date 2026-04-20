@@ -585,6 +585,7 @@
             <div class="history-config-title">Configuración de pH</div>
             <div class="history-config-item"><span>pH mínimo:</span> <span id="phMin">--</span></div>
             <div class="history-config-item"><span>pH máximo:</span> <span id="phMax">--</span></div>
+            <div class="history-config-item"><span>Estado de calibración:</span> <span id="phCalibrado">--</span></div>
           </div>
         </div>
 
@@ -596,6 +597,7 @@
             <div class="history-config-title">Configuración de EC/TDS</div>
             <div class="history-config-item"><span>EC mínimo:</span> <span id="ecMin">--</span></div>
             <div class="history-config-item"><span>EC máximo:</span> <span id="ecMax">--</span></div>
+            <div class="history-config-item"><span>Estado de calibración:</span> <span id="ecCalibrado">--</span></div>
           </div>
         </div>
 
@@ -664,8 +666,6 @@
       <p class="data-item"><span>Sistema activo:</span> <span id="sistemaActivo">--</span></p>
       <p class="data-item"><span>Sistema listo:</span> <span id="sistemaListo">--</span></p>
       <p class="data-item"><span>Dosis inicial hecha:</span> <span id="dosisInicialHecha">--</span></p>
-      <p class="data-item"><span>pH calibrado:</span> <span id="phCalibrado">--</span></p>
-      <p class="data-item"><span>EC calibrado:</span> <span id="ecCalibrado">--</span></p>
     </div>
 
     <div class="section-card">
@@ -902,6 +902,7 @@
       $("sistemaActivo").textContent = textoSiNo(estado.sistema_activo);
       $("sistemaListo").textContent = textoSiNo(estado.sistema_listo);
       $("dosisInicialHecha").textContent = textoSiNo(estado.dosis_inicial_hecha);
+
       $("phCalibrado").textContent = textoCalibrado(estado.ph_calibrado);
       $("ecCalibrado").textContent = textoCalibrado(estado.ec_calibrado);
 
