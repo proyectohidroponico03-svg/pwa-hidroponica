@@ -152,6 +152,71 @@
       margin-top: 15px;
     }
 
+    /* Tarjetas de sensores */
+    .sensor-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .sensor-card {
+      background: #fbfbf7;
+      border: 1px solid #ece9df;
+      border-radius: 16px;
+      padding: 18px 16px;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    .sensor-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      font-size: 0.95em;
+      font-weight: 700;
+      color: #666;
+    }
+
+    .sensor-card-subtitle {
+      font-size: 0.78em;
+      color: #8b8b8b;
+      margin-bottom: 6px;
+    }
+
+    .sensor-alerta {
+      display: inline-block;
+      background: #ffe9b3;
+      color: #b97700;
+      font-size: 0.75em;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .sensor-main-value {
+      font-size: 2.1em;
+      font-weight: 800;
+      color: #1f1f1f;
+      line-height: 1.1;
+    }
+
+    .sensor-unit {
+      font-size: 0.55em;
+      font-weight: 700;
+      color: #555;
+      margin-left: 4px;
+    }
+
+    .sensor-range {
+      margin-top: 8px;
+      font-size: 0.78em;
+      color: #7c7c7c;
+    }
+
     @media (max-width: 768px) {
       .hero {
         padding: 35px 20px;
@@ -171,6 +236,10 @@
       }
 
       .status-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sensor-cards {
         grid-template-columns: 1fr;
       }
 
@@ -243,9 +312,38 @@
 
     <div class="section-card">
       <h2 class="section-title">Sensores</h2>
-      <p class="data-item"><span>pH:</span> <span id="phValor">--</span></p>
-      <p class="data-item"><span>EC:</span> <span id="ecValor">--</span></p>
-      <p class="data-item"><span>Luz:</span> <span id="luzValor">--</span></p>
+
+      <div class="sensor-cards">
+        <div class="sensor-card">
+          <div class="sensor-card-top">🧪 <span>pH</span></div>
+          <div class="sensor-card-subtitle" id="phSubtitle">PH4502C</div>
+          <div class="sensor-alerta" id="phBadge">Estado</div>
+          <div class="sensor-main-value">
+            <span id="phValor">--</span><span class="sensor-unit">pH</span>
+          </div>
+          <div class="sensor-range">Rango óptimo: 5.5 - 7.5</div>
+        </div>
+
+        <div class="sensor-card">
+          <div class="sensor-card-top">💧 <span>TDS/Conductividad</span></div>
+          <div class="sensor-card-subtitle" id="ecSubtitle">SEN0244</div>
+          <div class="sensor-alerta" id="ecBadge">Estado</div>
+          <div class="sensor-main-value">
+            <span id="ecValor">--</span><span class="sensor-unit">ppm</span>
+          </div>
+          <div class="sensor-range">Rango óptimo: 400 - 1200 ppm</div>
+        </div>
+
+        <div class="sensor-card">
+          <div class="sensor-card-top">☀️ <span>Luz Ambiente</span></div>
+          <div class="sensor-card-subtitle" id="luzSubtitle">LDR</div>
+          <div class="sensor-alerta" id="luzBadge">Estado</div>
+          <div class="sensor-main-value">
+            <span id="luzValor">--</span><span class="sensor-unit">Valor</span>
+          </div>
+          <div class="sensor-range">Rango óptimo: Alto</div>
+        </div>
+      </div>
     </div>
 
     <div class="section-card">
@@ -340,6 +438,39 @@
       $("ultimaActualizacion").textContent = ahora.toLocaleString("es-CO");
     }
 
+    function actualizarTarjetasSensores(estado, sensores) {
+      const phConectado = activo(estado.sensor_ph_conectado);
+      const ecConectado = activo(estado.sensor_ec_conectado);
+      const luzConectado = activo(estado.sensor_luz_conectado);
+
+      $("phSubtitle").textContent = phConectado
+        ? (activo(estado.ph_calibrado) ? "PH4502C (Calibrado)" : "PH4502C (Sin calibrar)")
+        : "PH4502C (Desconectado)";
+
+      $("ecSubtitle").textContent = ecConectado
+        ? "SEN0244 (Conectado)"
+        : "SEN0244 (Desconectado - Sin datos)";
+
+      let luzTexto = "LDR";
+      const luzVal = Number(sensores.luz ?? 0);
+
+      if (!luzConectado) {
+        luzTexto = "LDR (Desconectado)";
+      } else if (luzVal <= 100) {
+        luzTexto = "LDR - Muy poca luz";
+      } else if (luzVal <= 500) {
+        luzTexto = "LDR - Poca luz";
+      } else {
+        luzTexto = "LDR - Buena luz";
+      }
+
+      $("luzSubtitle").textContent = luzTexto;
+
+      $("phBadge").textContent = phConectado ? "Activo" : "Alerta";
+      $("ecBadge").textContent = ecConectado ? "Activo" : "Alerta";
+      $("luzBadge").textContent = luzConectado ? "Activo" : "Alerta";
+    }
+
     const connectedRef = ref(db, ".info/connected");
     onValue(connectedRef, (snapshot) => {
       const conectado = snapshot.val();
@@ -394,6 +525,8 @@
       $("luzSensorEstado").textContent = textoConectado(estado.sensor_luz_conectado);
       $("luzSensorEstado").className = activo(estado.sensor_luz_conectado) ? "status-value green" : "status-value red";
 
+      actualizarTarjetasSensores(estado, sensores);
+
       $("alertaActiva").textContent = textoSiNo(alertas.activa);
       $("alertaEstado").textContent = valorSeguro(alertas.estado);
       $("alertaPPM").textContent = valorSeguro(alertas.ppm_actual);
@@ -406,5 +539,4 @@
     });
   </script>
 </body>
-</html>
 </html>
