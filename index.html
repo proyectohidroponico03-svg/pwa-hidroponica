@@ -226,6 +226,20 @@
 
     .sensor-card-subtitle { font-size: 0.78em; color: #8b8b8b; margin-bottom: 6px; }
 
+    .sensor-calibracion {
+      font-size: 0.78em;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .sensor-calibracion.ok {
+      color: #2eaf4a;
+    }
+
+    .sensor-calibracion.warn {
+      color: #e53935;
+    }
+
     .sensor-alerta {
       display: inline-block;
       background: #ffe9b3; color: #b97700;
@@ -438,6 +452,14 @@
       box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25), 0 4px 16px rgba(34, 197, 94, 0.12);
     }
 
+    body.dark-mode .sensor-calibracion.ok {
+      color: #4ade80;
+    }
+
+    body.dark-mode .sensor-calibracion.warn {
+      color: #f87171;
+    }
+
     body.dark-mode .btn,
     body.dark-mode .access-btn {
       background-color: #16a34a;
@@ -575,6 +597,7 @@
         <div class="sensor-card">
           <div class="sensor-card-top">🧪 <span>pH</span></div>
           <div class="sensor-card-subtitle" id="phSubtitle">PH4502C</div>
+          <div id="phCalibrado" class="sensor-calibracion">--</div>
           <div class="sensor-alerta" id="phBadge">Estado</div>
           <div class="sensor-main-value">
             <span id="phValor">--</span><span class="sensor-unit">pH</span>
@@ -594,6 +617,7 @@
         <div class="sensor-card">
           <div class="sensor-card-top">💧 <span>TDS/Conductividad</span></div>
           <div class="sensor-card-subtitle" id="ecSubtitle">SEN0244</div>
+          <div id="ecCalibrado" class="sensor-calibracion">--</div>
           <div class="sensor-alerta" id="ecBadge">Estado</div>
           <div class="sensor-main-value">
             <span id="ecValor">--</span><span class="sensor-unit">ppm</span>
@@ -642,9 +666,9 @@
             <div class="history-config-title">Configuración de pH</div>
             <div class="history-config-item"><span>pH mínimo:</span> <span id="phMin">--</span></div>
             <div class="history-config-item"><span>pH máximo:</span> <span id="phMax">--</span></div>
-            <div class="history-config-item"><span>Estado de calibración:</span> <span id="phCalibrado">--</span></div>
           </div>
         </div>
+
         <div class="history-card">
           <h3 class="history-title">Historial de TDS</h3>
           <canvas id="chartTds"></canvas>
@@ -652,16 +676,12 @@
             <div class="history-config-title">Configuración de EC/TDS</div>
             <div class="history-config-item"><span>EC mínimo:</span> <span id="ecMin">--</span></div>
             <div class="history-config-item"><span>EC máximo:</span> <span id="ecMax">--</span></div>
-            <div class="history-config-item"><span>Estado de calibración:</span> <span id="ecCalibrado">--</span></div>
           </div>
         </div>
+
         <div class="history-card">
           <h3 class="history-title">Historial de Luz</h3>
           <canvas id="chartLuz"></canvas>
-          <div class="history-config">
-            <div class="history-config-title">Configuración general</div>
-            <div class="history-config-item"><span>Litros de agua:</span> <span id="litrosAgua">--</span></div>
-          </div>
         </div>
       </div>
     </div>
@@ -760,6 +780,7 @@
       const rangAncho = ((ecMaxVal - ecMinVal) / (max - min)) * 100;
       const pos = Math.max(0, Math.min(100, ((ecVal - min) / (max - min)) * 100));
       const enRango = ecVal >= ecMinVal && ecVal <= ecMaxVal;
+
       $("ecRango").style.left = rangoIzq + "%";
       $("ecRango").style.width = rangAncho + "%";
       $("ecIndicador").style.left = pos + "%";
@@ -789,6 +810,7 @@
       const banner = $("bannerAlertaEC");
       const seccion = $("seccionAlertaEC");
       const activa = activo(alertas.activa);
+
       if (activa) {
         $("bannerEtapa").textContent = valorSeguro(alertas.etapa);
         $("bannerAguaRetirar").textContent = valorSeguro(alertas.agua_retirar_ml);
@@ -810,7 +832,7 @@
       const luzConectado = activo(estado.sensor_luz_conectado);
 
       $("phSubtitle").textContent = phConectado
-        ? (activo(estado.ph_calibrado) ? "PH4502C (Calibrado)" : "PH4502C (Sin calibrar)")
+        ? "PH4502C (Conectado)"
         : "PH4502C (Desconectado)";
 
       $("ecSubtitle").textContent = ecConectado
@@ -825,6 +847,7 @@
       else luzTexto = "LDR - Buena luz";
 
       $("luzSubtitle").textContent = luzTexto;
+
       $("phBadge").textContent = phConectado ? "Activo" : "Alerta";
       $("ecBadge").textContent = ecConectado ? "Activo" : "Alerta";
       $("luzBadge").textContent = luzConectado ? "Activo" : "Alerta";
@@ -982,7 +1005,6 @@
       $("phMax").textContent = valorSeguro(config.ph_max);
       $("ecMin").textContent = valorSeguro(config.ec_min);
       $("ecMax").textContent = valorSeguro(config.ec_max);
-      $("litrosAgua").textContent = valorSeguro(config.litros_agua);
 
       $("diasCultivo").textContent = valorSeguro(cultivo.dias_cultivo);
       $("etapaCultivo").textContent = valorSeguro(cultivo.etapa);
@@ -990,6 +1012,9 @@
 
       $("phCalibrado").textContent = textoCalibrado(estado.ph_calibrado);
       $("ecCalibrado").textContent = textoCalibrado(estado.ec_calibrado);
+
+      $("phCalibrado").className = "sensor-calibracion " + (activo(estado.ph_calibrado) ? "ok" : "warn");
+      $("ecCalibrado").className = "sensor-calibracion " + (activo(estado.ec_calibrado) ? "ok" : "warn");
 
       $("phSensorEstado").textContent = textoConectado(estado.sensor_ph_conectado);
       $("phSensorEstado").className = activo(estado.sensor_ph_conectado) ? "status-value green" : "status-value red";
