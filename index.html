@@ -7,9 +7,10 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #eaf5f2;
+      background: #eef3ef;
       margin: 0;
       padding: 0;
+      color: #1f1f1f;
     }
 
     .hero {
@@ -37,7 +38,7 @@
       color: white;
       border: none;
       cursor: pointer;
-      border-radius: 8px;
+      border-radius: 10px;
       text-align: center;
     }
 
@@ -46,22 +47,28 @@
     }
 
     .content {
-      margin: 30px;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      margin: 24px;
+      background: transparent;
+      padding: 0;
+    }
+
+    .section-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      margin-bottom: 20px;
     }
 
     .section-title {
       font-size: 1.8em;
-      margin-bottom: 10px;
-      color: #4caf50;
+      margin-bottom: 12px;
+      color: #33a047;
     }
 
     .data-item {
       margin: 6px 0;
-      font-size: 1.2em;
+      font-size: 1.15em;
     }
 
     .data-item span {
@@ -74,45 +81,109 @@
       margin: 30px auto 0;
     }
 
-    .status {
-      background-color: #f1f8e9;
-      border: 1px solid #4caf50;
-      padding: 15px;
-      border-radius: 10px;
+    .status-panel {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px 22px 14px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
       margin-bottom: 20px;
     }
 
-    .status-row {
+    .status-title {
+      font-size: 1.35em;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: #1f1f1f;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .status-card {
       display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      margin-bottom: 10px;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 10px;
+      border-radius: 12px;
+      background: #f8fbf8;
     }
 
-    .status-item {
-      font-size: 1.15em;
+    .status-icon {
+      font-size: 18px;
+      line-height: 1;
+      margin-top: 2px;
     }
 
-    .status-item span {
-      font-weight: bold;
+    .status-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
 
-    .green { color: green; }
-    .red { color: red; }
-    .blue { color: #2196F3; }
-    .orange { color: #ff9800; }
+    .status-label {
+      font-size: 0.92em;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .status-value {
+      font-size: 0.95em;
+      font-weight: 700;
+    }
+
+    .status-time {
+      margin-top: 14px;
+      font-size: 0.85em;
+      color: #8a8a8a;
+    }
+
+    .green { color: #2eaf4a; }
+    .red { color: #e53935; }
+    .blue { color: #1e88e5; }
+    .orange { color: #fb8c00; }
 
     .alert-box {
       background: #fff8e1;
       border: 1px solid #ffb300;
       padding: 15px;
-      border-radius: 10px;
+      border-radius: 12px;
       margin-top: 15px;
     }
 
     .muted {
       color: #666;
       font-size: 0.95em;
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        padding: 35px 20px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      .content {
+        margin: 14px;
+      }
+
+      .section-card,
+      .status-panel {
+        padding: 16px;
+      }
+
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .access-btn {
+        width: 100%;
+        max-width: 260px;
+      }
     }
   </style>
 </head>
@@ -125,56 +196,106 @@
   </div>
 
   <div class="content" id="sensorData" style="display:none;">
-    <div class="status">
-      <div class="status-row">
-        <div class="status-item"><span>Conexión:</span> <span id="conexionEstado" class="green">Cargando...</span></div>
-        <div class="status-item"><span>Modo:</span> <span class="blue">Sensores reales</span></div>
-        <div class="status-item"><span>pH Sensor:</span> <span id="phSensorEstado" class="green">Cargando...</span></div>
-        <div class="status-item"><span>TDS Sensor:</span> <span id="tdsSensorEstado" class="green">Cargando...</span></div>
-        <div class="status-item"><span>Luz Sensor:</span> <span id="luzSensorEstado" class="green">Cargando...</span></div>
+
+    <div class="status-panel">
+      <div class="status-title">Estado del Sistema</div>
+
+      <div class="status-grid">
+        <div class="status-card">
+          <div class="status-icon green">📶</div>
+          <div class="status-text">
+            <div class="status-label">Conexión</div>
+            <div id="conexionEstado" class="status-value green">Cargando...</div>
+          </div>
+        </div>
+
+        <div class="status-card">
+          <div class="status-icon blue">⚙️</div>
+          <div class="status-text">
+            <div class="status-label">Modo</div>
+            <div class="status-value blue">Sensores reales</div>
+          </div>
+        </div>
+
+        <div class="status-card">
+          <div class="status-icon green">🧪</div>
+          <div class="status-text">
+            <div class="status-label">pH Sensor</div>
+            <div id="phSensorEstado" class="status-value green">Cargando...</div>
+          </div>
+        </div>
+
+        <div class="status-card">
+          <div class="status-icon green">💧</div>
+          <div class="status-text">
+            <div class="status-label">TDS Sensor</div>
+            <div id="tdsSensorEstado" class="status-value green">Cargando...</div>
+          </div>
+        </div>
+
+        <div class="status-card">
+          <div class="status-icon green">☀️</div>
+          <div class="status-text">
+            <div class="status-label">Luz Sensor</div>
+            <div id="luzSensorEstado" class="status-value green">Cargando...</div>
+          </div>
+        </div>
       </div>
-      <p class="muted">Última actualización web: <span id="ultimaActualizacion">--</span></p>
+
+      <div class="status-time">
+        Última actualización web: <span id="ultimaActualizacion">--</span>
+      </div>
     </div>
 
-    <h2 class="section-title">Sensores</h2>
-    <p class="data-item"><span>pH:</span> <span id="phValor">--</span></p>
-    <p class="data-item"><span>EC:</span> <span id="ecValor">--</span></p>
-    <p class="data-item"><span>Luz:</span> <span id="luzValor">--</span></p>
+    <div class="section-card">
+      <h2 class="section-title">Sensores</h2>
+      <p class="data-item"><span>pH:</span> <span id="phValor">--</span></p>
+      <p class="data-item"><span>EC:</span> <span id="ecValor">--</span></p>
+      <p class="data-item"><span>Luz:</span> <span id="luzValor">--</span></p>
+    </div>
 
-    <h2 class="section-title">Configuración</h2>
-    <p class="data-item"><span>pH mínimo:</span> <span id="phMin">--</span></p>
-    <p class="data-item"><span>pH máximo:</span> <span id="phMax">--</span></p>
-    <p class="data-item"><span>EC mínimo:</span> <span id="ecMin">--</span></p>
-    <p class="data-item"><span>EC máximo:</span> <span id="ecMax">--</span></p>
-    <p class="data-item"><span>Litros de agua:</span> <span id="litrosAgua">--</span></p>
+    <div class="section-card">
+      <h2 class="section-title">Configuración</h2>
+      <p class="data-item"><span>pH mínimo:</span> <span id="phMin">--</span></p>
+      <p class="data-item"><span>pH máximo:</span> <span id="phMax">--</span></p>
+      <p class="data-item"><span>EC mínimo:</span> <span id="ecMin">--</span></p>
+      <p class="data-item"><span>EC máximo:</span> <span id="ecMax">--</span></p>
+      <p class="data-item"><span>Litros de agua:</span> <span id="litrosAgua">--</span></p>
+    </div>
 
-    <h2 class="section-title">Cultivo</h2>
-    <p class="data-item"><span>Días de cultivo:</span> <span id="diasCultivo">--</span></p>
-    <p class="data-item"><span>Etapa:</span> <span id="etapaCultivo">--</span></p>
-    <p class="data-item"><span>Fecha inicio:</span> <span id="fechaInicioCultivo">--</span></p>
+    <div class="section-card">
+      <h2 class="section-title">Cultivo</h2>
+      <p class="data-item"><span>Días de cultivo:</span> <span id="diasCultivo">--</span></p>
+      <p class="data-item"><span>Etapa:</span> <span id="etapaCultivo">--</span></p>
+      <p class="data-item"><span>Fecha inicio:</span> <span id="fechaInicioCultivo">--</span></p>
+    </div>
 
-    <h2 class="section-title">Estado del Sistema</h2>
-    <p class="data-item"><span>Bomba ácido:</span> <span id="bombaAcido">--</span></p>
-    <p class="data-item"><span>Bomba agua:</span> <span id="bombaAgua">--</span></p>
-    <p class="data-item"><span>Bomba base:</span> <span id="bombaBase">--</span></p>
-    <p class="data-item"><span>Bomba nutriente A:</span> <span id="bombaNutrienteA">--</span></p>
-    <p class="data-item"><span>Bomba nutriente B:</span> <span id="bombaNutrienteB">--</span></p>
-    <p class="data-item"><span>Bomba recirculación:</span> <span id="bombaRecirculacion">--</span></p>
-    <p class="data-item"><span>Sistema activo:</span> <span id="sistemaActivo">--</span></p>
-    <p class="data-item"><span>Sistema listo:</span> <span id="sistemaListo">--</span></p>
-    <p class="data-item"><span>Dosis inicial hecha:</span> <span id="dosisInicialHecha">--</span></p>
-    <p class="data-item"><span>pH calibrado:</span> <span id="phCalibrado">--</span></p>
-    <p class="data-item"><span>EC calibrado:</span> <span id="ecCalibrado">--</span></p>
+    <div class="section-card">
+      <h2 class="section-title">Estado del Sistema</h2>
+      <p class="data-item"><span>Bomba ácido:</span> <span id="bombaAcido">--</span></p>
+      <p class="data-item"><span>Bomba agua:</span> <span id="bombaAgua">--</span></p>
+      <p class="data-item"><span>Bomba base:</span> <span id="bombaBase">--</span></p>
+      <p class="data-item"><span>Bomba nutriente A:</span> <span id="bombaNutrienteA">--</span></p>
+      <p class="data-item"><span>Bomba nutriente B:</span> <span id="bombaNutrienteB">--</span></p>
+      <p class="data-item"><span>Bomba recirculación:</span> <span id="bombaRecirculacion">--</span></p>
+      <p class="data-item"><span>Sistema activo:</span> <span id="sistemaActivo">--</span></p>
+      <p class="data-item"><span>Sistema listo:</span> <span id="sistemaListo">--</span></p>
+      <p class="data-item"><span>Dosis inicial hecha:</span> <span id="dosisInicialHecha">--</span></p>
+      <p class="data-item"><span>pH calibrado:</span> <span id="phCalibrado">--</span></p>
+      <p class="data-item"><span>EC calibrado:</span> <span id="ecCalibrado">--</span></p>
+    </div>
 
-    <h2 class="section-title">Alerta EC alto</h2>
-    <div class="alert-box">
-      <p class="data-item"><span>Activa:</span> <span id="alertaActiva">--</span></p>
-      <p class="data-item"><span>Estado:</span> <span id="alertaEstado">--</span></p>
-      <p class="data-item"><span>PPM actual:</span> <span id="alertaPPM">--</span></p>
-      <p class="data-item"><span>Etapa:</span> <span id="alertaEtapa">--</span></p>
-      <p class="data-item"><span>Agua a retirar:</span> <span id="aguaRetirar">--</span></p>
-      <p class="data-item"><span>Agua a reponer:</span> <span id="aguaReponer">--</span></p>
-      <p class="data-item"><span>Mensaje:</span> <span id="alertaMensaje">--</span></p>
+    <div class="section-card">
+      <h2 class="section-title">Alerta EC alto</h2>
+      <div class="alert-box">
+        <p class="data-item"><span>Activa:</span> <span id="alertaActiva">--</span></p>
+        <p class="data-item"><span>Estado:</span> <span id="alertaEstado">--</span></p>
+        <p class="data-item"><span>PPM actual:</span> <span id="alertaPPM">--</span></p>
+        <p class="data-item"><span>Etapa:</span> <span id="alertaEtapa">--</span></p>
+        <p class="data-item"><span>Agua a retirar:</span> <span id="aguaRetirar">--</span></p>
+        <p class="data-item"><span>Agua a reponer:</span> <span id="aguaReponer">--</span></p>
+        <p class="data-item"><span>Mensaje:</span> <span id="alertaMensaje">--</span></p>
+      </div>
     </div>
 
     <button class="access-btn" onclick="goBack()">Volver</button>
@@ -182,10 +303,7 @@
 
   <script type="module">
     import { db } from "./firebase-config.js";
-    import {
-      ref,
-      onValue
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
     window.showData = function () {
       document.getElementById("hero").style.display = "none";
@@ -232,7 +350,7 @@
     onValue(connectedRef, (snapshot) => {
       const conectado = snapshot.val();
       $("conexionEstado").textContent = conectado ? "En línea" : "Fuera de línea";
-      $("conexionEstado").className = conectado ? "green" : "red";
+      $("conexionEstado").className = conectado ? "status-value green" : "status-value red";
     });
 
     const cultivoRef = ref(db, "cultivo_vertical");
@@ -274,13 +392,13 @@
       $("ecCalibrado").textContent = textoCalibrado(estado.ec_calibrado);
 
       $("phSensorEstado").textContent = textoConectado(estado.sensor_ph_conectado);
-      $("phSensorEstado").className = activo(estado.sensor_ph_conectado) ? "green" : "red";
+      $("phSensorEstado").className = activo(estado.sensor_ph_conectado) ? "status-value green" : "status-value red";
 
       $("tdsSensorEstado").textContent = textoConectado(estado.sensor_ec_conectado);
-      $("tdsSensorEstado").className = activo(estado.sensor_ec_conectado) ? "green" : "red";
+      $("tdsSensorEstado").className = activo(estado.sensor_ec_conectado) ? "status-value green" : "status-value red";
 
       $("luzSensorEstado").textContent = textoConectado(estado.sensor_luz_conectado);
-      $("luzSensorEstado").className = activo(estado.sensor_luz_conectado) ? "green" : "red";
+      $("luzSensorEstado").className = activo(estado.sensor_luz_conectado) ? "status-value green" : "status-value red";
 
       $("alertaActiva").textContent = textoSiNo(alertas.activa);
       $("alertaEstado").textContent = valorSeguro(alertas.estado);
@@ -293,5 +411,7 @@
       actualizarHoraWeb();
     });
   </script>
+</body>
+</html>
 </body>
 </html>
