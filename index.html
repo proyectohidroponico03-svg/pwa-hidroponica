@@ -900,7 +900,13 @@
           maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
-            x: { grid: { display: false }, ticks: {} },
+            x: {
+              grid: { display: false },
+              ticks: {
+                maxRotation: 0,
+                minRotation: 0
+              }
+            },
             y: { beginAtZero, grid: {}, ticks: {} }
           }
         }
@@ -943,15 +949,18 @@
     };
 
     function formatearLabelHistorial(item) {
-      const fecha = item?.fecha || "";
       const hora = item?.hora || "";
-      if (fecha && hora) return `${fecha} ${hora}`;
-      if (hora) return hora;
-      if (fecha) return fecha;
+
+      if (hora) return hora.slice(0, 5);
+
       if (item?.timestamp) {
         const d = new Date(Number(item.timestamp) * 1000);
-        return d.toLocaleString("es-CO");
+        return d.toLocaleTimeString("es-CO", {
+          hour: "2-digit",
+          minute: "2-digit"
+        });
       }
+
       return "--";
     }
 
