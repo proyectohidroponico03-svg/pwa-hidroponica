@@ -960,7 +960,7 @@
       return Object.values(obj)
         .filter(item => item && item.valor !== undefined && item.valor !== null)
         .sort((a, b) => Number(a.timestamp || 0) - Number(b.timestamp || 0))
-        .slice(-20)
+        .slice(-30)
         .map(item => ({ label: formatearLabelHistorial(item), valor: Number(item.valor || 0) }));
     }
 
