@@ -381,7 +381,6 @@
 
     .cosecha-card {
       text-align: center;
-      border: 1px solid #4ade80;
     }
 
     .cosecha-texto {
@@ -405,10 +404,42 @@
       font-weight: 800;
       color: white;
       cursor: pointer;
+      transition: background 0.25s ease, opacity 0.25s ease, transform 0.2s ease;
     }
 
-    .btn-cosecha.detener { background: #dc2626; }
-    .btn-cosecha.iniciar { background: #16a34a; }
+    .btn-cosecha:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    .cosecha-bloqueada {
+      border: 1px solid #dc2626;
+    }
+
+    .cosecha-bloqueada .section-title {
+      color: #dc2626;
+    }
+
+    .cosecha-activa {
+      border: 1px solid #22c55e;
+    }
+
+    .cosecha-activa .section-title {
+      color: #22c55e;
+    }
+
+    .btn-cosecha:disabled {
+      background: #b91c1c !important;
+      opacity: 0.78;
+      cursor: not-allowed;
+    }
+
+    .cosecha-activa .btn-cosecha.detener {
+      background: #dc2626 !important;
+    }
+
+    .cosecha-activa .btn-cosecha.iniciar {
+      background: #16a34a !important;
+    }
 
     body.dark-mode {
       background: #111827;
@@ -749,16 +780,16 @@
       </div>
     </div>
 
-    <div id="seccionCosecha" class="section-card cosecha-card" style="display:none;">
-      <h2 class="section-title">🥬 Cosecha lista</h2>
-      <p id="mensajeCosecha" class="cosecha-texto">Las lechugas están listas para cosechar.</p>
+    <div id="seccionCosecha" class="section-card cosecha-card cosecha-bloqueada">
+      <h2 class="section-title">🥬 Cosecha</h2>
+      <p id="mensajeCosecha" class="cosecha-texto">Los botones se activarán cuando el cultivo llegue a 30 días.</p>
 
       <div class="cosecha-botones">
-        <button class="btn-cosecha detener" onclick="pararSistema()">
+        <button id="btnPararSistema" class="btn-cosecha detener" onclick="pararSistema()" disabled>
           🛑 Parar sistema
         </button>
 
-        <button class="btn-cosecha iniciar" onclick="iniciarNuevoCiclo()">
+        <button id="btnIniciarCiclo" class="btn-cosecha iniciar" onclick="iniciarNuevoCiclo()" disabled>
           🌱 Iniciar nuevo ciclo
         </button>
       </div>
@@ -792,10 +823,12 @@
     };
 
     window.pararSistema = function () {
+      if ($("btnPararSistema").disabled) return;
       set(ref(db, "cultivo_vertical/comandos/parar_sistema"), true);
     };
 
     window.iniciarNuevoCiclo = function () {
+      if ($("btnIniciarCiclo").disabled) return;
       set(ref(db, "cultivo_vertical/comandos/iniciar_sistema"), true);
     };
 
@@ -871,14 +904,25 @@
     }
 
     function actualizarAlertaCosecha(alertaCosecha) {
-      if (activo(alertaCosecha.activa)) {
-        $("seccionCosecha").style.display = "block";
+      const lista = activo(alertaCosecha.activa);
+
+      $("seccionCosecha").style.display = "block";
+
+      if (lista) {
+        $("seccionCosecha").className = "section-card cosecha-card cosecha-activa";
         $("mensajeCosecha").textContent = valorSeguro(
           alertaCosecha.mensaje,
           "Las lechugas están listas para cosechar."
         );
+
+        $("btnPararSistema").disabled = false;
+        $("btnIniciarCiclo").disabled = false;
       } else {
-        $("seccionCosecha").style.display = "none";
+        $("seccionCosecha").className = "section-card cosecha-card cosecha-bloqueada";
+        $("mensajeCosecha").textContent = "Los botones se activarán cuando el cultivo llegue a 30 días.";
+
+        $("btnPararSistema").disabled = true;
+        $("btnIniciarCiclo").disabled = true;
       }
     }
 
@@ -1107,4 +1151,4 @@
     });
   </script>
 </body>
-</html>>
+</html>
