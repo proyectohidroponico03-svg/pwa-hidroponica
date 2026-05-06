@@ -1008,6 +1008,10 @@
     }
 
     const chartPh = crearGrafico("chartPh", "pH", "#4caf50", false);
+    chartPh.options.scales.y.min = 0;
+chartPh.options.scales.y.max = 14;
+chartPh.options.scales.y.ticks.stepSize = 1;
+chartPh.update();
     const chartTds = crearGrafico("chartTds", "TDS", "#4285f4", true);
     const chartLuz = crearGrafico("chartLuz", "Luz", "#fbbc04", true);
 
