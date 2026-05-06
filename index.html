@@ -1089,6 +1089,33 @@ chartPh.update();
       $("conexionEstado").textContent = conectado ? "En línea" : "Fuera de línea";
       $("conexionEstado").className = conectado ? "status-value green" : "status-value red";
     });
+    let ultimoTimestampESP = 0;
+
+function verificarConexionESP() {
+  const ahora = Math.floor(Date.now() / 1000);
+  const espDesconectada = ultimoTimestampESP === 0 || (ahora - ultimoTimestampESP > 30);
+
+  if (espDesconectada) {
+    $("conexionEstado").textContent = "Fuera de línea";
+    $("conexionEstado").className = "status-value red";
+
+    $("phSensorEstado").textContent = "Desconectado";
+    $("phSensorEstado").className = "status-value red";
+
+    $("tdsSensorEstado").textContent = "Desconectado";
+    $("tdsSensorEstado").className = "status-value red";
+
+    $("luzSensorEstado").textContent = "Desconectado";
+    $("luzSensorEstado").className = "status-value red";
+
+    $("phValor").textContent = "0";
+    $("ecValor").textContent = "0";
+    $("luzValor").textContent = "0";
+  }
+}
+
+setInterval(verificarConexionESP, 5000);
+    
 
     const cultivoRef = ref(db, "cultivo_vertical");
     onValue(cultivoRef, (snapshot) => {
@@ -1096,6 +1123,8 @@ chartPh.update();
       const sensores = data.sensores || {};
       const config = data.configuracion || {};
       const estado = data.estado_sistema || {};
+      ultimoTimestampESP = Number(estado.ultima_actualizacion_timestamp || 0);
+verificarConexionESP();
       const cultivo = data.cultivo || {};
       const alertas = (data.alertas && data.alertas.ec_alto) ? data.alertas.ec_alto : {};
       const alertaCosecha = (data.alertas && data.alertas.cosecha) ? data.alertas.cosecha : {};
