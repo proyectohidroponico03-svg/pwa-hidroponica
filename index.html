@@ -865,11 +865,7 @@
       document.getElementById("sensorData").style.display = "none";
     };
 
-    window.pararSistema = function () {
-      if ($("btnPararSistema").disabled) return;
-      set(ref(db, "cultivo_vertical/comandos/parar_sistema"), true);
-    };
-    window.pararSistema = function () {
+  window.pararSistema = function () {
   if ($("btnPararSistema").disabled) return;
   set(ref(db, "cultivo_vertical/comandos/parar_sistema"), true);
 };
