@@ -551,6 +551,35 @@
         font-size: 0.88em;
       }
     }
+    .btn-inyectar-agua {
+  margin-top: 14px;
+  background: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 1em;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.btn-inyectar-agua:hover:not(:disabled) {
+  background: #15803d;
+  transform: translateY(-1px);
+}
+
+.btn-inyectar-agua:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.alerta-mensaje {
+  margin-top: 10px;
+  font-size: 0.95em;
+  font-weight: 600;
+}
   </style>
 </head>
 
@@ -803,14 +832,20 @@
       </div>
     </div>
 
-    <div id="seccionAlertaEC" style="display:none;" class="section-card">
-      <h2 class="section-title">⚠️ Alerta EC alto</h2>
-      <div class="alert-box">
-        <p class="data-item"><span>Etapa:</span> <span id="alertaEtapa">--</span></p>
-        <p class="data-item"><span>Agua a retirar:</span> <span id="aguaRetirar">--</span></p>
-        <p class="data-item"><span>Agua a reponer:</span> <span id="aguaReponer">--</span></p>
-      </div>
-    </div>
+ <div id="seccionAlertaEC" style="display:none;" class="section-card">
+  <h2 class="section-title">⚠️ Alerta EC alto</h2>
+
+  <div class="alert-box">
+    <p class="data-item"><span>Etapa:</span> <span id="alertaEtapa">--</span></p>
+    <p class="data-item"><span>Agua a retirar:</span> <span id="aguaRetirar">--</span> ml</p>
+    <p class="data-item"><span>Agua a reponer:</span> <span id="aguaReponer">--</span> ml</p>
+    <p class="alerta-mensaje" id="mensajeAlertaEC">--</p>
+
+    <button id="btnInyectarAguaNueva" class="btn-inyectar-agua" onclick="inyectarAguaNueva()" disabled>
+      💧 Inyectar agua nueva
+    </button>
+  </div>
+</div>
 
     <button class="access-btn" onclick="goBack()">Volver</button>
   </div>
@@ -834,11 +869,39 @@
       if ($("btnPararSistema").disabled) return;
       set(ref(db, "cultivo_vertical/comandos/parar_sistema"), true);
     };
+    window.pararSistema = function () {
+  if ($("btnPararSistema").disabled) return;
+  set(ref(db, "cultivo_vertical/comandos/parar_sistema"), true);
+};
 
-    window.iniciarNuevoCiclo = function () {
-      if ($("btnIniciarCiclo").disabled) return;
-      set(ref(db, "cultivo_vertical/comandos/iniciar_sistema"), true);
-    };
+window.iniciarNuevoCiclo = function () {
+  if ($("btnIniciarCiclo").disabled) return;
+  set(ref(db, "cultivo_vertical/comandos/iniciar_sistema"), true);
+};
+
+window.inyectarAguaNueva = function () {
+  const boton = $("btnInyectarAguaNueva");
+  if (boton && boton.disabled) return;
+
+  set(ref(db, "cultivo_vertical/comandos/inyectar_agua_nueva"), true);
+
+  if (boton) {
+    boton.disabled = true;
+    boton.textContent = "Inyectando agua nueva...";
+  }
+};
+
+   window.inyectarAguaNueva = function () {
+  const boton = $("btnInyectarAguaNueva");
+  if (boton && boton.disabled) return;
+
+  set(ref(db, "cultivo_vertical/comandos/inyectar_agua_nueva"), true);
+
+  if (boton) {
+    boton.disabled = true;
+    boton.textContent = "Inyectando agua nueva...";
+  }
+};
 
     const $ = (id) => document.getElementById(id);
 
@@ -891,25 +954,47 @@
       $("luzIndicador").className = "sensor-progress-indicator" + (enRango ? "" : " fuera");
     }
 
-    function actualizarBannerAlerta(alertas) {
-      const banner = $("bannerAlertaEC");
-      const seccion = $("seccionAlertaEC");
-      const activa = activo(alertas.activa);
+function actualizarBannerAlerta(alertas) {
+  const banner = $("bannerAlertaEC");
+  const seccion = $("seccionAlertaEC");
+  const botonInyectar = $("btnInyectarAguaNueva");
+  const activa = activo(alertas.activa);
+  const estadoAlerta = valorSeguro(alertas.estado, "sin_alerta");
 
-      if (activa) {
-        $("bannerEtapa").textContent = valorSeguro(alertas.etapa);
-        $("bannerAguaRetirar").textContent = valorSeguro(alertas.agua_retirar_ml);
-        $("bannerAguaReponer").textContent = valorSeguro(alertas.agua_reponer_ml);
-        $("alertaEtapa").textContent = valorSeguro(alertas.etapa);
-        $("aguaRetirar").textContent = valorSeguro(alertas.agua_retirar_ml);
-        $("aguaReponer").textContent = valorSeguro(alertas.agua_reponer_ml);
-        banner.classList.add("visible");
-        seccion.style.display = "block";
-      } else {
-        banner.classList.remove("visible");
-        seccion.style.display = "none";
-      }
+  if (activa) {
+    $("bannerEtapa").textContent = valorSeguro(alertas.etapa);
+    $("bannerAguaRetirar").textContent = valorSeguro(alertas.agua_retirar_ml);
+    $("bannerAguaReponer").textContent = valorSeguro(alertas.agua_reponer_ml);
+
+    $("alertaEtapa").textContent = valorSeguro(alertas.etapa);
+    $("aguaRetirar").textContent = valorSeguro(alertas.agua_retirar_ml);
+    $("aguaReponer").textContent = valorSeguro(alertas.agua_reponer_ml);
+    $("mensajeAlertaEC").textContent = valorSeguro(alertas.mensaje, "EC alto detectado.");
+
+    banner.classList.add("visible");
+    seccion.style.display = "block";
+
+    if (estadoAlerta === "esperando_retiro_agua") {
+      botonInyectar.disabled = false;
+      botonInyectar.textContent = "💧 Inyectar agua nueva";
+    } else if (estadoAlerta === "inyectando_agua") {
+      botonInyectar.disabled = true;
+      botonInyectar.textContent = "Inyectando agua nueva...";
+    } else {
+      botonInyectar.disabled = true;
+      botonInyectar.textContent = "Esperando confirmación...";
     }
+
+  } else {
+    banner.classList.remove("visible");
+    seccion.style.display = "none";
+
+    if (botonInyectar) {
+      botonInyectar.disabled = true;
+      botonInyectar.textContent = "💧 Inyectar agua nueva";
+    }
+  }
+}
 
     function actualizarAlertaCosecha(alertaCosecha) {
       const lista = activo(alertaCosecha.activa);
