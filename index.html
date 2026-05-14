@@ -580,6 +580,34 @@
   font-size: 0.95em;
   font-weight: 600;
 }
+    #seccionAlertaEC {
+  text-align: center;
+}
+
+#seccionAlertaEC .section-title {
+  text-align: center;
+}
+
+#seccionAlertaEC .alert-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#seccionAlertaEC .data-item {
+  width: 100%;
+  text-align: center;
+}
+
+#seccionAlertaEC .alerta-mensaje {
+  text-align: center;
+}
+
+#seccionAlertaEC .btn-inyectar-agua {
+  display: block;
+  margin: 18px auto 0 auto;
+}
   </style>
 </head>
 
@@ -842,7 +870,7 @@
     <p class="alerta-mensaje" id="mensajeAlertaEC">--</p>
 
     <button id="btnInyectarAguaNueva" class="btn-inyectar-agua" onclick="inyectarAguaNueva()" disabled>
-      💧 Inyectar agua nueva
+      💧 Confirmar e inyectar agua nueva
     </button>
   </div>
 </div>
@@ -883,7 +911,7 @@ window.inyectarAguaNueva = function () {
 
   if (boton) {
     boton.disabled = true;
-    boton.textContent = "Inyectando agua nueva...";
+    boton.textContent = "Confirmación enviada. Inyectando agua nueva...";
   }
 };
 
@@ -895,7 +923,7 @@ window.inyectarAguaNueva = function () {
 
   if (boton) {
     boton.disabled = true;
-    boton.textContent = "Inyectando agua nueva...";
+    boton.textContent = "Confirmación enviada. Inyectando agua nueva...";
   }
 };
 
@@ -972,7 +1000,7 @@ function actualizarBannerAlerta(alertas) {
 
     if (estadoAlerta === "esperando_retiro_agua") {
       botonInyectar.disabled = false;
-      botonInyectar.textContent = "💧 Inyectar agua nueva";
+     botonInyectar.textContent = "💧 Confirmar e inyectar agua nueva";
     } else if (estadoAlerta === "inyectando_agua") {
       botonInyectar.disabled = true;
       botonInyectar.textContent = "Inyectando agua nueva...";
