@@ -765,6 +765,25 @@
           </div>
         </div>
 
+        <div class="sensor-card">
+          <div class="sensor-card-top">🚰 <span>Nivel de Agua</span></div>
+          <div class="sensor-card-subtitle" id="aguaSubtitle">SEN0205</div>
+          <div class="sensor-alerta" id="aguaBadge">Estado</div>
+          <div class="sensor-main-value">
+            <span id="aguaValor">--</span><span class="sensor-unit">Nivel</span>
+          </div>
+          <div class="sensor-range">Nivel mínimo permitido: 1 L</div>
+          <div class="sensor-progress-wrap">
+            <div class="sensor-progress-labels">
+              <span>0 L</span><span>1 L</span><span>2 L</span>
+            </div>
+            <div class="sensor-progress-bar-bg">
+              <div class="sensor-progress-rango" id="aguaRango"></div>
+              <div class="sensor-progress-indicator" id="aguaIndicador"></div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -978,6 +997,21 @@ window.inyectarAguaNueva = function () {
       $("luzIndicador").className = "sensor-progress-indicator" + (enRango ? "" : " fuera");
     }
 
+    function actualizarBarraAgua(nivelAgua) {
+      const min = 0, max = 2;
+      const nivelMinimo = 1;
+
+      const rangoIzq = ((nivelMinimo - min) / (max - min)) * 100;
+      const rangoAncho = ((max - nivelMinimo) / (max - min)) * 100;
+      const pos = Math.max(0, Math.min(100, ((nivelAgua - min) / (max - min)) * 100));
+      const enRango = nivelAgua >= nivelMinimo;
+
+      $("aguaRango").style.left = rangoIzq + "%";
+      $("aguaRango").style.width = rangoAncho + "%";
+      $("aguaIndicador").style.left = pos + "%";
+      $("aguaIndicador").className = "sensor-progress-indicator" + (enRango ? "" : " fuera");
+    }
+
 function actualizarBannerAlerta(alertas) {
   const banner = $("bannerAlertaEC");
   const seccion = $("seccionAlertaEC");
@@ -1063,6 +1097,17 @@ function actualizarBannerAlerta(alertas) {
       $("phBadge").textContent = phConectado ? "Activo" : "Alerta";
       $("ecBadge").textContent = ecConectado ? "Activo" : "Alerta";
       $("luzBadge").textContent = luzConectado ? "Activo" : "Alerta";
+
+      const nivelAgua = Number(sensores.nivel_agua_litros ?? sensores.nivel_agua ?? 0);
+      const nivelAguaOk = nivelAgua >= 1;
+
+      $("aguaValor").textContent = nivelAguaOk ? "Correcto" : "Bajo";
+      $("aguaSubtitle").textContent = nivelAguaOk
+        ? "SEN0205 (Nivel estable)"
+        : "SEN0205 (Nivel bajo)";
+      $("aguaBadge").textContent = nivelAguaOk ? "Activo" : "Alerta";
+      $("aguaBadge").style.background = nivelAguaOk ? "#d1fae5" : "#fee2e2";
+      $("aguaBadge").style.color = nivelAguaOk ? "#065f46" : "#991b1b";
     }
 
     function actualizarTarjetasActuadores(estado) {
@@ -1206,6 +1251,7 @@ function actualizarBannerAlerta(alertas) {
       const phVal = Number(valorSeguro(sensores.ph, 0));
       const ecVal = Number(valorSeguro(sensores.ec, 0));
       const luzVal = Number(valorSeguro(sensores.luz, 0));
+      const nivelAguaVal = Number(sensores.nivel_agua_litros ?? sensores.nivel_agua ?? 0);
 
       const ecMinVal = Number(valorSeguro(config.ec_min, 400));
       const ecMaxVal = Number(valorSeguro(config.ec_max, 900));
@@ -1245,6 +1291,7 @@ function actualizarBannerAlerta(alertas) {
       actualizarBarraPH(phVal, phMinVal, phMaxVal);
       actualizarBarraEC(ecVal, ecMinVal, ecMaxVal);
       actualizarBarraLuz(luzVal);
+      actualizarBarraAgua(nivelAguaVal);
       actualizarBannerAlerta(alertas);
       actualizarAlertaCosecha(alertaCosecha);
 
@@ -1268,4 +1315,5 @@ function actualizarBannerAlerta(alertas) {
     });
   </script>
 </body>
+</html>
 </html>
