@@ -889,6 +889,10 @@
   🛑 Parar sistema
 </button>
 
+        <button id="btnReanudarSistema" class="btn-cosecha iniciar" onclick="reanudarSistema()">
+          ▶️ Reanudar sistema
+        </button>
+
         <button id="btnIniciarCiclo" class="btn-cosecha iniciar" onclick="iniciarNuevoCiclo()" disabled>
           🌱 Iniciar nuevo ciclo
         </button>
@@ -930,12 +934,47 @@
 
   window.pararSistema = function () {
   if ($("btnPararSistema").disabled) return;
-  set(ref(db, "cultivo_vertical/comandos/parar_sistema"), true);
+
+  if (!confirm("¿Deseas detener el sistema?")) return;
+
+  set(ref(db, "cultivo_vertical/comandos/parar_sistema"), true)
+    .then(() => {
+      alert("Comando enviado: sistema detenido.");
+    })
+    .catch((error) => {
+      console.error(error);
+      alert("Error al enviar el comando de parada.");
+    });
+};
+
+window.reanudarSistema = function () {
+  if ($("btnReanudarSistema").disabled) return;
+
+  if (!confirm("¿Deseas reanudar el sistema?")) return;
+
+  set(ref(db, "cultivo_vertical/comandos/iniciar_sistema"), true)
+    .then(() => {
+      alert("Comando enviado: sistema reanudado.");
+    })
+    .catch((error) => {
+      console.error(error);
+      alert("Error al enviar el comando de reanudación.");
+    });
 };
 
 window.iniciarNuevoCiclo = function () {
   if ($("btnIniciarCiclo").disabled) return;
-  set(ref(db, "cultivo_vertical/comandos/iniciar_sistema"), true);
+
+  if (!confirm("¿Deseas iniciar un nuevo ciclo de cultivo?")) return;
+
+  set(ref(db, "cultivo_vertical/comandos/iniciar_sistema"), true)
+    .then(() => {
+      alert("Comando enviado: nuevo ciclo iniciado.");
+    })
+    .catch((error) => {
+      console.error(error);
+      alert("Error al iniciar nuevo ciclo.");
+    });
 };
 
 window.inyectarAguaNueva = function () {
@@ -1074,6 +1113,7 @@ function actualizarBannerAlerta(alertas) {
           );
 
         $("btnPararSistema").disabled = false;
+        $("btnReanudarSistema").disabled = false;
         $("btnIniciarCiclo").disabled = false;
 
       } else {
@@ -1081,9 +1121,10 @@ function actualizarBannerAlerta(alertas) {
           "section-card cosecha-card cosecha-bloqueada";
 
         $("mensajeCosecha").textContent =
-          "El sistema puede detenerse en cualquier momento. La opción de iniciar nuevo ciclo se habilita cuando el cultivo llega a 30 días.";
+          "El sistema puede detenerse o reanudarse en cualquier momento. La opción de iniciar nuevo ciclo se habilita cuando el cultivo llega a 30 días.";
 
         $("btnPararSistema").disabled = false;
+        $("btnReanudarSistema").disabled = false;
         $("btnIniciarCiclo").disabled = true;
       }
     }
@@ -1327,3 +1368,4 @@ function actualizarBannerAlerta(alertas) {
   </script>
 </body>
 </html>
+
