@@ -436,10 +436,26 @@
     }
 
     .btn-cosecha:disabled {
-      background: #b91c1c !important;
-      opacity: 0.78;
-      cursor: not-allowed;
-    }
+  background: #6b7280 !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+  }
+
+  .btn-cosecha.detener {
+    background: #dc2626;
+  }
+
+  .btn-cosecha.detener:hover {
+    background: #b91c1c;
+  }
+
+  .btn-cosecha.iniciar {
+    background: #16a34a;
+  }
+
+  .btn-cosecha.iniciar:hover {
+    background: #15803d;
+  }
 
     .cosecha-activa .btn-cosecha.detener {
       background: #dc2626 !important;
@@ -934,18 +950,6 @@ window.inyectarAguaNueva = function () {
   }
 };
 
-   window.inyectarAguaNueva = function () {
-  const boton = $("btnInyectarAguaNueva");
-  if (boton && boton.disabled) return;
-
-  set(ref(db, "cultivo_vertical/comandos/inyectar_agua_nueva"), true);
-
-  if (boton) {
-    boton.disabled = true;
-    boton.textContent = "Confirmación enviada. Inyectando agua nueva...";
-  }
-};
-
     const $ = (id) => document.getElementById(id);
 
     function activo(v) { return v === 1 || v === true || v === "1" || v === "true"; }
@@ -1060,17 +1064,24 @@ function actualizarBannerAlerta(alertas) {
       $("seccionCosecha").style.display = "block";
 
       if (lista) {
-        $("seccionCosecha").className = "section-card cosecha-card cosecha-activa";
-        $("mensajeCosecha").textContent = valorSeguro(
-          alertaCosecha.mensaje,
-          "Las lechugas están listas para cosechar."
-        );
+        $("seccionCosecha").className =
+          "section-card cosecha-card cosecha-activa";
+
+        $("mensajeCosecha").textContent =
+          valorSeguro(
+            alertaCosecha.mensaje,
+            "Las lechugas están listas para cosechar."
+          );
 
         $("btnPararSistema").disabled = false;
         $("btnIniciarCiclo").disabled = false;
+
       } else {
-        $("seccionCosecha").className = "section-card cosecha-card cosecha-bloqueada";
-        $("mensajeCosecha").textContent = "Los botones se activarán cuando el cultivo llegue a 30 días.";
+        $("seccionCosecha").className =
+          "section-card cosecha-card cosecha-bloqueada";
+
+        $("mensajeCosecha").textContent =
+          "El sistema puede detenerse en cualquier momento. La opción de iniciar nuevo ciclo se habilita cuando el cultivo llega a 30 días.";
 
         $("btnPararSistema").disabled = false;
         $("btnIniciarCiclo").disabled = true;
@@ -1315,5 +1326,4 @@ function actualizarBannerAlerta(alertas) {
     });
   </script>
 </body>
-</html>
 </html>
